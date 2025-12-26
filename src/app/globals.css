@@ -1,0 +1,208 @@
+/**
+ * Global CSS untuk Portal Berita Islami
+ * Tailwind CSS 4 dengan custom theme Islami
+ */
+
+@import "tailwindcss";
+
+/* ===== Custom Theme Islami ===== */
+@theme inline {
+  /* Warna Hijau Islami */
+  --color-islamGreen: #2E7D32;
+  --color-islamGreen-dark: #1B5E20;
+  --color-islamGreen-light: #4CAF50;
+  --color-islamGreen-pastel: #A5D6A7;
+  
+  /* Font Family */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Manrope', system-ui, sans-serif;
+  
+  /* Background & Surface */
+  --color-background: #FFFFFF;
+  --color-surface: #F5F5F5;
+  --color-surface-alt: #FAFAFA;
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}
+
+/* ===== Base Styles ===== */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* ===== Prose Styles untuk Artikel ===== */
+.prose {
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-links: #2E7D32;
+  --tw-prose-bold: #111827;
+  --tw-prose-quotes: #4b5563;
+  --tw-prose-quote-borders: #A5D6A7;
+  
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.prose h2 {
+  font-family: var(--font-heading);
+  color: var(--tw-prose-headings);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #A5D6A7;
+}
+
+.prose h3 {
+  font-family: var(--font-heading);
+  color: var(--tw-prose-headings);
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose a {
+  color: var(--tw-prose-links);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.prose a:hover {
+  color: #1B5E20;
+}
+
+.prose strong {
+  color: var(--tw-prose-bold);
+  font-weight: 600;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--tw-prose-quote-borders);
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: var(--tw-prose-quotes);
+  background-color: #F5F5F5;
+  padding: 1rem 1.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1.5rem 0;
+}
+
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.prose li {
+  margin: 0.5rem 0;
+  padding-left: 0.5rem;
+}
+
+.prose li::marker {
+  color: #2E7D32;
+}
+
+/* ===== Custom Utilities ===== */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== Animation ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #A5D6A7;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4CAF50;
+}
+
+/* ===== Focus Styles ===== */
+:focus-visible {
+  outline: 2px solid #2E7D32;
+  outline-offset: 2px;
+}
+
+/* ===== Selection ===== */
+::selection {
+  background-color: #A5D6A7;
+  color: #1B5E20;
+}
