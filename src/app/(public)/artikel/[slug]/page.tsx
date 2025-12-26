@@ -84,11 +84,19 @@ export default async function SingleArtikelPage({
           {/* Author & Meta Row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-t border-b border-gray-100 py-6 gap-4">
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-full bg-islamGreen/10 flex items-center justify-center text-islamGreen font-bold text-lg">
+              <Link 
+                href={`/penulis/${article.author.toLowerCase().replace(/\s+/g, '-')}`}
+                className="h-12 w-12 rounded-full bg-islamGreen/10 flex items-center justify-center text-islamGreen font-bold text-lg hover:bg-islamGreen hover:text-white transition-colors"
+              >
                 {article.author.charAt(0)}
-              </div>
+              </Link>
               <div className="text-left">
-                <p className="font-bold text-gray-900 text-sm">{article.author}</p>
+                <Link 
+                  href={`/penulis/${article.author.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="font-bold text-gray-900 text-sm hover:text-islamGreen transition-colors"
+                >
+                  {article.author}
+                </Link>
                 <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
                   <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {formatDate(article.date)}</span>
                   <span className="w-1 h-1 rounded-full bg-gray-300"></span>

@@ -3,6 +3,8 @@
  * Card artikel minimalis dengan hover effect hijau subtle
  */
 
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Clock, Eye, ArrowUpRight } from 'lucide-react';
@@ -96,7 +98,13 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
               
               {/* Meta */}
               <div className="mt-3 sm:mt-5 flex flex-wrap items-center gap-x-2 sm:gap-x-4 gap-y-1 sm:gap-y-2 text-xs sm:text-sm text-gray-300">
-                <span className="font-medium text-white">{article.author}</span>
+                <Link 
+                  href={`/penulis/${article.author.toLowerCase().replace(/\s+/g, '-')}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="font-medium text-white hover:text-islamGold transition-colors underline-offset-2 hover:underline"
+                >
+                  {article.author}
+                </Link>
                 <span className="h-1 w-1 rounded-full bg-gray-400 hidden sm:block" />
                 <span className="hidden sm:inline">{formatDate(article.date)}</span>
                 <span className="h-1 w-1 rounded-full bg-gray-400 hidden sm:block" />
@@ -154,7 +162,13 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
 
           {/* Meta */}
           <div className="mt-3 sm:mt-4 flex items-center justify-between border-t border-gray-100 pt-3 sm:pt-4 text-[10px] sm:text-xs text-gray-500">
-            <span className="font-medium text-gray-700">{article.author}</span>
+            <Link 
+              href={`/penulis/${article.author.toLowerCase().replace(/\s+/g, '-')}`}
+              onClick={(e) => e.stopPropagation()}
+              className="font-medium text-gray-700 hover:text-islamGreen transition-colors underline-offset-2 hover:underline"
+            >
+              {article.author}
+            </Link>
             <div className="flex items-center gap-2 sm:gap-3">
               <span>{formatDate(article.date)}</span>
               <span className="flex items-center gap-1">
