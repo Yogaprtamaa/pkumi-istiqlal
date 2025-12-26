@@ -63,7 +63,7 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
       <Link href={`/artikel/${article.slug}`} className="group block h-full">
         <Card className="relative h-full overflow-hidden border-0 shadow-xl transition-all duration-500 hover:shadow-2xl">
           {/* Image */}
-          <div className="relative aspect-16/10 overflow-hidden lg:aspect-video">
+          <div className="relative aspect-[4/3] sm:aspect-video overflow-hidden">
             <Image
               src={article.imageUrl}
               alt={article.title}
@@ -117,7 +117,7 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
     <Link href={`/artikel/${article.slug}`} className="group block h-full">
       <Card className="flex h-full flex-col overflow-hidden border-0 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
         {/* Image */}
-        <div className="relative aspect-16/10 overflow-hidden">
+        <div className="relative aspect-video overflow-hidden">
           <Image
             src={article.imageUrl}
             alt={article.title}
@@ -127,38 +127,38 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
           {/* Overlay on hover */}
           <div className="absolute inset-0 bg-islamGreen/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           {/* Badge Rubrik */}
-          <div className="absolute left-4 top-4">
+          <div className="absolute left-3 top-3 sm:left-4 sm:top-4">
             <Badge 
-              className="border-0 font-semibold shadow-md backdrop-blur-sm"
+              className="border-0 font-semibold shadow-md backdrop-blur-sm text-xs sm:text-sm"
               style={{ backgroundColor: article.rubrik.color, color: 'white' }}
             >
               {article.rubrik.name}
             </Badge>
           </div>
           {/* Read indicator */}
-          <div className="absolute bottom-4 right-4 flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 text-xs text-white backdrop-blur-sm">
-            <Clock className="h-3 w-3" />
+          <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-xs text-white backdrop-blur-sm">
+            <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
             {article.readTime} min
           </div>
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col p-5">
-          <h3 className="font-heading text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-islamGreen line-clamp-2">
+        <div className="flex flex-1 flex-col p-4 sm:p-5">
+          <h3 className="font-heading text-base sm:text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-islamGreen line-clamp-2">
             {article.title}
           </h3>
           
-          <p className="mt-2.5 flex-1 text-sm text-gray-600 line-clamp-2 leading-relaxed">
+          <p className="mt-2 sm:mt-2.5 flex-1 text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed">
             {article.excerpt}
           </p>
 
           {/* Meta */}
-          <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-gray-500">
+          <div className="mt-3 sm:mt-4 flex items-center justify-between border-t border-gray-100 pt-3 sm:pt-4 text-[10px] sm:text-xs text-gray-500">
             <span className="font-medium text-gray-700">{article.author}</span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <span>{formatDate(article.date)}</span>
               <span className="flex items-center gap-1">
-                <Eye className="h-3.5 w-3.5" />
+                <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 {formatViews(article.views)}
               </span>
             </div>
