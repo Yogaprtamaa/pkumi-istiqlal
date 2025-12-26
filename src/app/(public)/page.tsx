@@ -1,309 +1,312 @@
 /**
- * Homepage
- * Halaman utama portal berita Islami
- * Menampilkan Hero + Artikel Terbaru + Khazanah Carousel
+ * Homepage - Redesign "Editorial Layout"
+ * Fixed: Variable naming matching mockData.ts (imageUrl & rubrik.name)
  */
 
 import Link from 'next/link';
-import { ArrowRight, PenSquare, BookOpen, Users, Star } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, PenSquare, BookOpen, ArrowUpRight, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { HeroSection } from '@/components/public/HeroSection';
-import { ArticleCard } from '@/components/public/ArticleCard';
 import { KhazanahCarousel } from '@/components/public/KhazanahCarousel';
 import { getLatestArticles, rubriks, khazanah } from '@/lib/mockData';
 
 export default function HomePage() {
-  // Ambil artikel terbaru (skip 4 pertama yang sudah di hero)
-  const latestArticles = getLatestArticles(10).slice(4);
+  // DATA PREPARATION
+  // Kita ambil lebih banyak artikel untuk membuat layout yang variatif
+  const allArticles = getLatestArticles(10).slice(4); 
+  
+  // Destructuring untuk layout asimetris
+  const [mainFeature, secondaryFeature, ...standardArticles] = allArticles;
 
   return (
-    <>
-      {/* Hero Section */}
-      <HeroSection />
+    <main className="bg-white selection:bg-islamGreen/20 selection:text-islamGreen-dark">
+      
+      {/* 1. HERO SECTION */}
+      <div className="relative pb-12 lg:pb-24">
+        <HeroSection />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-white to-transparent pointer-events-none" />
+      </div>
 
-      {/* Artikel Terbaru Section */}
-      <section className="py-10 sm:py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-6 sm:mb-10 gap-4">
-            <div>
-              <span className="inline-block rounded-full bg-islamGreen/10 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-islamGreen mb-2 sm:mb-3">
-                📰 Artikel
-              </span>
-              <h2 className="font-heading text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
-                Artikel Terbaru
-              </h2>
-              <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-600 max-w-lg">
-                Bacaan terkini untuk memperkaya wawasan Islami Anda
-              </p>
-            </div>
-            <Link href="/artikel" className="hidden sm:block">
-              <Button variant="outline" className="group border-2 border-islamGreen text-islamGreen font-semibold hover:bg-islamGreen hover:text-white">
-                Lihat Semua
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
+      {/* 2. LATEST ARTICLES - THE "EDITORIAL GRID" */}
+      <section className="py-12 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6 border-b border-gray-100 pb-6">
+          <div className="max-w-2xl">
+            <span className="text-islamGreen font-bold tracking-widest text-xs uppercase mb-2 block">
+              Kurasi Redaksi
+            </span>
+            <h2 className="font-heading text-4xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
+              Sorotan <span className="text-islamGreen">Utama</span>
+            </h2>
           </div>
-
-          {/* Articles Grid */}
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {latestArticles.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
-
-          {/* Mobile View All Button */}
-          <div className="mt-10 text-center sm:hidden">
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-gray-500 hidden lg:block text-right max-w-xs leading-relaxed">
+              Analisis mendalam dan berita terkini pilihan redaksi untuk wawasan Anda.
+            </p>
             <Link href="/artikel">
-              <Button variant="outline" className="w-full max-w-xs border-2 border-islamGreen text-islamGreen font-semibold">
-                Lihat Semua Artikel
+              <Button variant="ghost" className="rounded-full hover:bg-islamGreen/5 text-islamGreen font-bold group">
+                Arsip Lengkap <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          
+          {/* A. KOLOM KIRI (8 cols) - Feature Story Besar */}
+          <div className="lg:col-span-8 flex flex-col gap-8">
+            <article className="group relative w-full overflow-hidden rounded-3xl bg-gray-900 shadow-xl min-h-[500px] lg:min-h-[600px] flex items-end">
+              <Image 
+                 // FIX: Menggunakan 'imageUrl' sesuai data Anda
+                 src={mainFeature?.imageUrl || '/placeholder.jpg'} 
+                 alt={mainFeature?.title || 'Featured Article'}
+                 fill
+                 className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-60"
+              />
+              <div className="relative z-10 p-6 lg:p-10 w-full bg-linear-to-t from-black/90 via-black/50 to-transparent">
+                <span className="inline-block px-3 py-1 bg-islamGreen text-white text-xs font-bold rounded mb-3">
+                  {/* FIX: Menggunakan 'rubrik.name' sesuai data Anda */}
+                  {mainFeature?.rubrik?.name || 'Utama'}
+                </span>
+                <h3 className="font-heading text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+                  <Link href={`/artikel/${mainFeature?.slug}`} className="hover:underline decoration-islamGreen decoration-2 underline-offset-4">
+                    {mainFeature?.title}
+                  </Link>
+                </h3>
+                <p className="text-gray-300 text-lg line-clamp-2 max-w-2xl mb-6">
+                  {mainFeature?.excerpt}
+                </p>
+                <div className="flex items-center gap-4 text-white/80 text-sm font-medium">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-gray-700 relative overflow-hidden">
+                       <div className="absolute inset-0 bg-islamGreen/50" />
+                    </div>
+                    <span>{mainFeature?.author || 'Redaksi'}</span>
+                  </div>
+                  <span className="w-1 h-1 bg-white/50 rounded-full" />
+                  <span>{mainFeature?.readTime} min baca</span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          {/* B. KOLOM KANAN (4 cols) - List Vertikal & Secondary */}
+          <div className="lg:col-span-4 flex flex-col gap-8 h-full">
+            <article className="relative bg-gray-50 rounded-3xl p-6 lg:p-8 border border-gray-100 flex-1 flex flex-col justify-between hover:border-islamGreen/30 transition-colors group">
+              <div>
+                <div className="flex justify-between items-start mb-6">
+                  <span className="w-10 h-1 bg-islamGreen rounded-full" />
+                  <ArrowUpRight className="text-gray-400 group-hover:text-islamGreen transition-colors" />
+                </div>
+                <h4 className="font-heading text-2xl font-bold text-gray-900 mb-3 group-hover:text-islamGreen transition-colors">
+                  <Link href={`/artikel/${secondaryFeature?.slug}`}>
+                    {secondaryFeature?.title}
+                  </Link>
+                </h4>
+                <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                  {secondaryFeature?.excerpt}
+                </p>
+              </div>
+              
+              <div className="relative h-48 w-full rounded-xl overflow-hidden mt-4">
+                 <Image 
+                    // FIX: Menggunakan 'imageUrl'
+                    src={secondaryFeature?.imageUrl || '/placeholder.jpg'}
+                    fill
+                    className="object-cover"
+                    alt="Secondary"
+                 />
+              </div>
+            </article>
+
+            {/* Quick List */}
+            <div className="bg-white rounded-3xl border border-gray-100 p-6 lg:p-8 shadow-sm">
+              <h5 className="font-bold text-gray-400 text-xs uppercase tracking-widest mb-6">Terbaru Hari Ini</h5>
+              <div className="space-y-6">
+                {standardArticles.slice(0, 3).map((article, idx) => (
+                  <div key={article.id} className="group flex gap-4 items-start">
+                    <span className="text-2xl font-heading font-bold text-gray-200 group-hover:text-islamGreen transition-colors">0{idx+1}</span>
+                    <div>
+                      <h6 className="font-bold text-gray-900 leading-snug group-hover:text-islamGreen transition-colors text-sm lg:text-base">
+                        <Link href={`/artikel/${article.slug}`}>
+                          {article.title}
+                        </Link>
+                      </h6>
+                      <span className="text-xs text-gray-400 mt-1 block">
+                        {/* Format Tanggal Sederhana */}
+                        {new Date(article.date).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' })}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Rubrik Section */}
-      <section className="relative overflow-hidden bg-linear-to-b from-gray-50/80 via-white to-white py-16 lg:py-20">
-        {/* Background decoration */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute -left-20 top-20 h-72 w-72 rounded-full bg-islamGreen-pastel/30 blur-3xl" />
-          <div className="absolute -right-20 bottom-20 h-72 w-72 rounded-full bg-islamGreen-pastel/30 blur-3xl" />
-        </div>
-        
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <span className="inline-block rounded-full bg-islamGreen/10 px-4 py-1.5 text-sm font-semibold text-islamGreen mb-3">
-              📂 Kategori
-            </span>
-            <h2 className="font-heading text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Jelajahi Rubrik
-            </h2>
-            <p className="mt-3 text-gray-600 max-w-lg mx-auto">
-              Temukan artikel sesuai topik yang Anda minati
-            </p>
+
+      {/* 3. RUBRIK / CATEGORY */}
+      <section className="py-16 bg-gray-50 border-y border-gray-200 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="font-heading text-2xl font-bold text-gray-900">Jelajahi Topik</h3>
+            <div className="flex gap-2">
+               <div className="w-2 h-2 rounded-full bg-islamGreen"></div>
+               <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+               <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+            </div>
           </div>
 
-          {/* Rubrik Grid */}
-          <div className="grid gap-3 sm:gap-5 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="flex gap-4 overflow-x-auto pb-8 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide snap-x">
             {rubriks.map((rubrik) => (
               <Link
                 key={rubrik.id}
                 href={`/rubrik/${rubrik.slug}`}
-                className="group relative overflow-hidden rounded-xl sm:rounded-2xl bg-white p-4 sm:p-6 shadow-md transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                className="snap-start shrink-0 w-[280px] sm:w-[320px] group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                {/* Background gradient on hover */}
-                <div 
-                  className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{ background: `linear-gradient(135deg, ${rubrik.color}08 0%, ${rubrik.color}15 100%)` }}
-                />
-                
-                {/* Accent Color Bar */}
-                <div 
-                  className="absolute left-0 top-0 h-1 w-full transition-all duration-300 group-hover:h-1.5"
-                  style={{ backgroundColor: rubrik.color }}
-                />
-                
-                {/* Icon */}
-                <div 
-                  className="relative mb-2 sm:mb-4 inline-flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg"
-                  style={{ backgroundColor: `${rubrik.color}15` }}
-                >
-                  <span className="text-lg sm:text-2xl" style={{ color: rubrik.color }}>☪</span>
+                <div className="flex items-start justify-between mb-4">
+                  <div 
+                    className="h-12 w-12 rounded-xl flex items-center justify-center text-xl transition-colors group-hover:bg-white"
+                    style={{ backgroundColor: `${rubrik.color}15`, color: rubrik.color }}
+                  >
+                    ☪
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-gray-900 transition-colors" />
                 </div>
                 
-                <h3 className="relative font-heading text-sm sm:text-lg font-bold text-gray-900 transition-colors group-hover:text-islamGreen">
+                <h3 className="font-heading text-xl font-bold text-gray-900 mb-2 group-hover:text-islamGreen transition-colors">
                   {rubrik.name}
                 </h3>
-                <p className="relative mt-1 sm:mt-2 text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed hidden sm:block">
+                <p className="text-sm text-gray-500 line-clamp-2 mb-4">
                   {rubrik.description}
                 </p>
                 
-                {/* Arrow indicator */}
-                <div className="relative mt-2 sm:mt-4 flex items-center text-xs sm:text-sm font-semibold opacity-0 transition-all duration-300 group-hover:opacity-100" style={{ color: rubrik.color }}>
-                  Lihat <span className="hidden sm:inline">&nbsp;artikel</span>
-                  <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1" />
-                </div>
+                <div 
+                  className="absolute bottom-0 left-0 h-1 w-0 transition-all duration-500 group-hover:w-full"
+                  style={{ backgroundColor: rubrik.color }}
+                />
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Khazanah Section */}
-      <section className="py-10 sm:py-16 lg:py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-6 sm:mb-10 gap-4">
-            <div>
-              <span className="inline-block rounded-full bg-purple-100 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-purple-700 mb-2 sm:mb-3">
-                📚 Khazanah
-              </span>
-              <h2 className="font-heading text-2xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl">
-                Pilihan Khazanah
-              </h2>
-              <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-600 max-w-lg">
-                Tafsir, hadits, doa, dan kisah inspiratif untuk mencerahkan hati
-              </p>
-            </div>
-            <Link href="/khazanah" className="hidden sm:block">
-              <Button variant="outline" className="group border-2 border-purple-600 text-purple-600 font-semibold hover:bg-purple-600 hover:text-white">
-                Lihat Semua
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
-          </div>
 
-          {/* Khazanah Carousel */}
-          <KhazanahCarousel items={khazanah} />
-        </div>
-      </section>
-
-      {/* Newsletter CTA Section */}
-      <section className="relative overflow-hidden bg-linear-to-br from-islamGreen via-islamGreen-dark to-islamGreen py-10 sm:py-16 lg:py-20">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-        </div>
-        
-        <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <div className="mb-4 sm:mb-6 inline-flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-            <span className="text-2xl sm:text-3xl">✉️</span>
-          </div>
-          <h2 className="font-heading text-2xl font-extrabold text-white sm:text-3xl lg:text-4xl">
-            Dapatkan Artikel Terbaru
-          </h2>
-          <p className="mt-3 sm:mt-4 text-sm sm:text-lg text-islamGreen-pastel/90">
-            Berlangganan newsletter kami dan dapatkan artikel Islami langsung di inbox Anda setiap minggu.
-          </p>
-          
-          {/* Newsletter Form Placeholder */}
-          <div className="mt-6 sm:mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <input
-              type="email"
-              placeholder="Masukkan email Anda"
-              className="rounded-xl border-2 border-white/20 bg-white/10 px-4 sm:px-5 py-3 sm:py-3.5 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:w-80 backdrop-blur-sm text-sm sm:text-base"
-            />
-            <Button className="bg-white text-islamGreen hover:bg-gray-100 font-bold text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl shadow-lg shadow-black/10">
-              Berlangganan
-            </Button>
-          </div>
-          
-          <p className="mt-4 sm:mt-6 text-xs sm:text-sm text-islamGreen-pastel/80">
-            🔒 Kami menghargai privasi Anda. Berhenti berlangganan kapan saja.
-          </p>
-        </div>
-      </section>
-
-      {/* Contributor CTA Section */}
-      <section className="py-10 sm:py-16 lg:py-24 bg-linear-to-b from-gray-50 to-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-4xl bg-white shadow-xl sm:shadow-2xl border border-gray-100">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-[0.03]">
-              <div className="absolute inset-0" style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232E7D32' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }} />
-            </div>
-            
-            {/* Green accent */}
-            <div className="absolute left-0 top-0 h-1.5 sm:h-2 w-full bg-linear-to-r from-islamGreen via-islamGreen-light to-islamGreen" />
-            
-            <div className="relative grid gap-8 p-5 sm:p-8 md:grid-cols-2 md:p-12 lg:gap-16 lg:p-16">
-              {/* Content */}
-              <div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-islamGreen/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-islamGreen">
-                  <span className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-islamGreen animate-pulse" />
-                  Bergabung Bersama Kami
+      {/* 4. KHAZANAH */}
+      <section className="py-20 lg:py-32 bg-white relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <div className="grid lg:grid-cols-2 gap-16 items-center">
+              
+              <div className="relative z-10">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-sm font-bold mb-6">
+                  <BookOpen className="w-4 h-4" /> Khazanah Islam
                 </span>
-                <h2 className="mt-4 sm:mt-6 font-heading text-xl font-extrabold text-gray-900 sm:text-3xl lg:text-4xl xl:text-5xl leading-tight">
-                  Jadilah Kontributor Nur Berita
+                <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-[1.1] mb-6">
+                  Menyelami Samudra <br/>
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-purple-400">
+                    Hikmah & Ilmu
+                  </span>
                 </h2>
-                <p className="mt-3 sm:mt-5 text-gray-600 text-sm sm:text-lg leading-relaxed">
-                  Bagikan pengetahuan Islami Anda kepada jutaan pembaca. Tulis artikel rubrik atau 
-                  khazanah dan berkontribusi dalam menyebarkan kebaikan.
+                <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-md">
+                  Kumpulan tafsir, hadits shahih, dan kisah inspiratif para sahabat untuk menyejukkan hati di tengah hiruk pikuk dunia.
                 </p>
                 
-                {/* Stats */}
-                <div className="mt-5 sm:mt-8 flex gap-4 sm:gap-8">
-                  <div>
-                    <div className="text-xl sm:text-3xl font-extrabold text-islamGreen">500+</div>
-                    <div className="text-xs sm:text-sm text-gray-500">Artikel</div>
-                  </div>
-                  <div>
-                    <div className="text-xl sm:text-3xl font-extrabold text-islamGreen">50+</div>
-                    <div className="text-xs sm:text-sm text-gray-500">Kontributor</div>
-                  </div>
-                  <div>
-                    <div className="text-xl sm:text-3xl font-extrabold text-islamGreen">100K+</div>
-                    <div className="text-xs sm:text-sm text-gray-500">Pembaca</div>
-                  </div>
-                </div>
-                
-                {/* CTA Buttons */}
-                <div className="mt-6 sm:mt-10 flex flex-col gap-3 sm:gap-4 sm:flex-row">
-                  <Link href="/submit/rubrik">
-                    <Button size="lg" className="w-full bg-islamGreen hover:bg-islamGreen-dark sm:w-auto font-bold text-sm sm:text-base px-5 sm:px-8 shadow-lg shadow-islamGreen/20">
-                      <PenSquare className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                      Kirim Artikel Rubrik
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href="/khazanah">
+                    <Button size="lg" className="rounded-full bg-purple-600 hover:bg-purple-700 text-white px-8 h-12">
+                      Buka Pustaka
                     </Button>
                   </Link>
-                  <Link href="/submit/khazanah">
-                    <Button size="lg" variant="outline" className="w-full border-2 border-islamGreen text-islamGreen hover:bg-islamGreen hover:text-white sm:w-auto font-bold text-sm sm:text-base px-5 sm:px-8">
-                      <BookOpen className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                      Kirim Khazanah
-                    </Button>
-                  </Link>
+                  <Button variant="ghost" className="rounded-full text-purple-700 hover:bg-purple-50 gap-2 h-12">
+                    <PlayCircle className="w-5 h-5" /> Video Kajian
+                  </Button>
                 </div>
               </div>
-              
-              {/* Features */}
-              <div className="flex items-center">
-                <div className="space-y-3 sm:space-y-5 w-full">
-                  <div className="flex gap-3 sm:gap-5 rounded-xl sm:rounded-2xl bg-gray-50/80 p-4 sm:p-5 transition-all duration-300 hover:bg-islamGreen-pastel/20 hover:shadow-md">
-                    <div className="flex h-10 w-10 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-islamGreen/10 shadow-sm">
-                      <PenSquare className="h-5 w-5 sm:h-7 sm:w-7 text-islamGreen" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 text-sm sm:text-lg">Tulis dengan Mudah</h3>
-                      <p className="mt-1 sm:mt-1.5 text-xs sm:text-base text-gray-600">
-                        Editor sederhana dengan dukungan Markdown untuk menulis artikel
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-3 sm:gap-5 rounded-xl sm:rounded-2xl bg-gray-50/80 p-4 sm:p-5 transition-all duration-300 hover:bg-islamGreen-pastel/20 hover:shadow-md">
-                    <div className="flex h-10 w-10 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-islamGreen/10 shadow-sm">
-                      <Users className="h-5 w-5 sm:h-7 sm:w-7 text-islamGreen" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 text-sm sm:text-lg">Jangkau Pembaca Luas</h3>
-                      <p className="mt-1 sm:mt-1.5 text-xs sm:text-base text-gray-600">
-                        Artikel Anda dibaca oleh ribuan muslim di seluruh Indonesia
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-3 sm:gap-5 rounded-xl sm:rounded-2xl bg-gray-50/80 p-4 sm:p-5 transition-all duration-300 hover:bg-islamGreen-pastel/20 hover:shadow-md">
-                    <div className="flex h-10 w-10 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-islamGreen/10 shadow-sm">
-                      <Star className="h-5 w-5 sm:h-7 sm:w-7 text-islamGreen" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 text-sm sm:text-lg">Pahala Jariyah</h3>
-                      <p className="mt-1 sm:mt-1.5 text-xs sm:text-base text-gray-600">
-                        Setiap ilmu yang bermanfaat adalah amal jariyah yang terus mengalir
-                      </p>
-                    </div>
-                  </div>
-                </div>
+
+              <div className="relative">
+                 <div className="absolute -top-20 -right-20 w-72 h-72 bg-purple-200/30 rounded-full blur-3xl" />
+                 <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-islamGreen/20 rounded-full blur-3xl" />
+                 
+                 <div className="relative bg-white/50 backdrop-blur-sm p-4 rounded-3xl border border-white/50 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                    <KhazanahCarousel items={khazanah} />
+                 </div>
               </div>
-            </div>
-          </div>
+           </div>
         </div>
       </section>
-    </>
+
+
+      {/* 5. CONTRIBUTOR & NEWSLETTER */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8">
+          
+          {/* Contributor Card */}
+          <div className="bg-gray-50 rounded-[2.5rem] p-8 lg:p-12 border border-gray-100 relative overflow-hidden group">
+             <div className="absolute top-0 right-0 p-12 opacity-5 transform translate-x-1/4 -translate-y-1/4 group-hover:scale-110 transition-transform duration-700">
+                <PenSquare className="w-64 h-64" />
+             </div>
+             
+             <div className="relative z-10 h-full flex flex-col justify-between">
+               <div>
+                 <h3 className="font-heading text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
+                   Suara Anda,<br/>Amal Jariyah Anda.
+                 </h3>
+                 <p className="text-gray-600 text-lg mb-8 max-w-md">
+                   Bergabunglah dengan 50+ kontributor lainnya. Tulisan yang bermanfaat adalah sedekah yang tak terputus.
+                 </p>
+               </div>
+               
+               <div className="space-y-4">
+                  <div className="flex -space-x-3">
+                    {[1,2,3,4].map(i => (
+                      <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-300"></div>
+                    ))}
+                    <div className="w-10 h-10 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">+50</div>
+                  </div>
+                  <Link href="/submit/rubrik">
+                    <Button variant="outline" className="w-full sm:w-auto rounded-xl border-2 border-gray-900 text-gray-900 font-bold hover:bg-gray-900 hover:text-white transition-all">
+                      Mulai Menulis
+                    </Button>
+                  </Link>
+               </div>
+             </div>
+          </div>
+
+          {/* Newsletter Card */}
+          <div className="bg-islamGreen rounded-[2.5rem] p-8 lg:p-12 relative overflow-hidden text-white flex flex-col justify-center">
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E")` }} />
+
+            <div className="relative z-10">
+              <div className="mb-6 w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl">
+                ✉️
+              </div>
+              <h3 className="font-heading text-3xl lg:text-4xl font-extrabold mb-4">
+                Intisari Mingguan
+              </h3>
+              <p className="text-islamGreen-pastel/90 text-lg mb-8">
+                Satu email setiap Jumat. Tanpa spam. Hanya artikel terbaik minggu ini.
+              </p>
+
+              <form className="flex flex-col gap-3">
+                <input 
+                  type="email" 
+                  placeholder="alamat@email.com" 
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/20 transition-all font-medium"
+                />
+                <Button className="w-full bg-white text-islamGreen hover:bg-gray-100 font-bold text-lg h-14 rounded-xl shadow-lg shadow-black/10">
+                  Langganan Gratis
+                </Button>
+              </form>
+              <p className="text-xs text-white/60 mt-4 text-center">
+                Bisa berhenti berlangganan kapan saja.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
   );
 }
