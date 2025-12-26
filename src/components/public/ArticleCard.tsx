@@ -5,7 +5,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Clock, Eye } from 'lucide-react';
+import { Clock, Eye, ArrowUpRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatDate, formatViews } from '@/lib/utils';
@@ -21,27 +21,33 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
   if (variant === 'horizontal') {
     return (
       <Link href={`/artikel/${article.slug}`} className="group block">
-        <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-islamGreen/20">
-          <div className="flex gap-4 p-4">
+        <Card className="overflow-hidden border-0 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+          <div className="flex gap-3 sm:gap-4 p-2.5 sm:p-3">
             {/* Thumbnail */}
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg">
+            <div className="relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 overflow-hidden rounded-lg sm:rounded-xl">
               <Image
                 src={article.imageUrl}
                 alt={article.title}
                 fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
+              <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
             
             {/* Content */}
-            <div className="flex-1 min-w-0">
-              <Badge variant="secondary" className="mb-1 text-[10px]">
+            <div className="flex flex-1 flex-col justify-center min-w-0">
+              <Badge 
+                variant="secondary" 
+                className="mb-1 sm:mb-1.5 w-fit text-[9px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5"
+                style={{ backgroundColor: `${article.rubrik.color}15`, color: article.rubrik.color }}
+              >
                 {article.rubrik.name}
               </Badge>
-              <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-islamGreen">
+              <h3 className="line-clamp-2 text-xs sm:text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-islamGreen">
                 {article.title}
               </h3>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 sm:mt-1.5 text-[10px] sm:text-xs text-gray-500 flex items-center gap-1">
+                <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                 {formatDate(article.date)}
               </p>
             </div>
@@ -54,41 +60,49 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
   // Variant featured untuk hero section
   if (variant === 'featured') {
     return (
-      <Link href={`/artikel/${article.slug}`} className="group block">
-        <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:ring-2 hover:ring-islamGreen/30">
+      <Link href={`/artikel/${article.slug}`} className="group block h-full">
+        <Card className="relative h-full overflow-hidden border-0 shadow-xl transition-all duration-500 hover:shadow-2xl">
           {/* Image */}
-          <div className="relative aspect-video overflow-hidden">
+          <div className="relative aspect-16/10 overflow-hidden lg:aspect-video">
             <Image
               src={article.imageUrl}
               alt={article.title}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               priority
             />
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
+            
+            {/* Hover Overlay */}
+            <div className="absolute inset-0 bg-islamGreen/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            
+            {/* Arrow Icon */}
+            <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
+              <ArrowUpRight className="h-5 w-5 text-white" />
+            </div>
             
             {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <Badge className="mb-3 bg-islamGreen hover:bg-islamGreen-dark">
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white md:p-8">
+              <Badge className="mb-2 sm:mb-4 bg-islamGreen/90 backdrop-blur-sm font-semibold hover:bg-islamGreen border-0 text-xs sm:text-sm">
                 {article.rubrik.name}
               </Badge>
-              <h2 className="font-heading text-2xl font-bold leading-tight md:text-3xl lg:text-4xl">
+              <h2 className="font-heading text-lg sm:text-2xl font-extrabold leading-tight md:text-3xl lg:text-4xl drop-shadow-lg">
                 {article.title}
               </h2>
-              <p className="mt-3 line-clamp-2 text-sm text-gray-200 md:text-base">
+              <p className="mt-2 sm:mt-3 line-clamp-2 text-xs sm:text-sm text-gray-200/90 md:text-base max-w-2xl">
                 {article.excerpt}
               </p>
               
               {/* Meta */}
-              <div className="mt-4 flex items-center gap-4 text-sm text-gray-300">
-                <span>{article.author}</span>
-                <span>•</span>
-                <span>{formatDate(article.date)}</span>
-                <span>•</span>
-                <span className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  {article.readTime} menit
+              <div className="mt-3 sm:mt-5 flex flex-wrap items-center gap-x-2 sm:gap-x-4 gap-y-1 sm:gap-y-2 text-xs sm:text-sm text-gray-300">
+                <span className="font-medium text-white">{article.author}</span>
+                <span className="h-1 w-1 rounded-full bg-gray-400 hidden sm:block" />
+                <span className="hidden sm:inline">{formatDate(article.date)}</span>
+                <span className="h-1 w-1 rounded-full bg-gray-400 hidden sm:block" />
+                <span className="flex items-center gap-1 sm:gap-1.5">
+                  <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                  {article.readTime} menit baca
                 </span>
               </div>
             </div>
@@ -101,44 +115,51 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
   // Default variant - card standar
   return (
     <Link href={`/artikel/${article.slug}`} className="group block h-full">
-      <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-islamGreen/20">
+      <Card className="flex h-full flex-col overflow-hidden border-0 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
         {/* Image */}
         <div className="relative aspect-16/10 overflow-hidden">
           <Image
             src={article.imageUrl}
             alt={article.title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
+          {/* Overlay on hover */}
+          <div className="absolute inset-0 bg-islamGreen/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           {/* Badge Rubrik */}
-          <div className="absolute left-3 top-3">
-            <Badge className="bg-islamGreen/90 backdrop-blur-sm hover:bg-islamGreen">
+          <div className="absolute left-4 top-4">
+            <Badge 
+              className="border-0 font-semibold shadow-md backdrop-blur-sm"
+              style={{ backgroundColor: article.rubrik.color, color: 'white' }}
+            >
               {article.rubrik.name}
             </Badge>
+          </div>
+          {/* Read indicator */}
+          <div className="absolute bottom-4 right-4 flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 text-xs text-white backdrop-blur-sm">
+            <Clock className="h-3 w-3" />
+            {article.readTime} min
           </div>
         </div>
 
         {/* Content */}
         <div className="flex flex-1 flex-col p-5">
-          <h3 className="font-heading text-lg font-semibold leading-snug text-gray-900 transition-colors group-hover:text-islamGreen line-clamp-2">
+          <h3 className="font-heading text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-islamGreen line-clamp-2">
             {article.title}
           </h3>
           
-          <p className="mt-2 flex-1 text-sm text-gray-600 line-clamp-2">
+          <p className="mt-2.5 flex-1 text-sm text-gray-600 line-clamp-2 leading-relaxed">
             {article.excerpt}
           </p>
 
           {/* Meta */}
-          <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-            <span>{formatDate(article.date)}</span>
+          <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-gray-500">
+            <span className="font-medium text-gray-700">{article.author}</span>
             <div className="flex items-center gap-3">
+              <span>{formatDate(article.date)}</span>
               <span className="flex items-center gap-1">
                 <Eye className="h-3.5 w-3.5" />
                 {formatViews(article.views)}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                {article.readTime} min
               </span>
             </div>
           </div>

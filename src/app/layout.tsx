@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import { Inter, Manrope } from 'next/font/google';
 import './globals.css';
 import { SITE_CONFIG } from '@/lib/constants';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // Font Inter untuk body text
 const inter = Inter({
@@ -68,7 +69,9 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable} ${manrope.variable}`}>
       <body className="min-h-screen bg-white font-sans antialiased">
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
