@@ -5,11 +5,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, PenSquare, BookOpen, ArrowUpRight, PlayCircle } from 'lucide-react';
+import { ArrowRight, PenSquare, BookOpen, ArrowUpRight, PlayCircle, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { HeroSection } from '@/components/public/HeroSection';
 import { KhazanahCarousel } from '@/components/public/KhazanahCarousel';
-import { getLatestArticles, rubriks, khazanah } from '@/lib/mockData';
+import { RunningText } from '@/components/public/RunningText';
+import { getLatestArticles, rubriks, khazanah, articles } from '@/lib/mockData';
 
 export default function HomePage() {
   // DATA PREPARATION
@@ -19,13 +20,26 @@ export default function HomePage() {
   // Destructuring untuk layout asimetris
   const [mainFeature, secondaryFeature, ...standardArticles] = allArticles;
 
+  // Artikel untuk running text (ambil 8 artikel terbaru)
+  const runningTextArticles = articles.slice(0, 8).map(article => ({
+    id: article.id,
+    title: article.title,
+    slug: article.slug,
+    rubrik: article.rubrik
+  }));
+
   return (
     <main className="bg-white selection:bg-islamGreen/20 selection:text-islamGreen-dark">
       
       {/* 1. HERO SECTION */}
-      <div className="relative pb-12 lg:pb-24">
+      <div className="relative pb-8 lg:pb-16">
         <HeroSection />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-white to-transparent pointer-events-none" />
+      </div>
+
+      {/* 0. RUNNING TEXT - Breaking News Ticker */}
+      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto -mt-4 mb-8 lg:mb-12">
+        <RunningText articles={runningTextArticles} className="rounded-2xl shadow-lg" />
       </div>
 
       {/* 2. LATEST ARTICLES - THE "EDITORIAL GRID" */}
@@ -146,7 +160,8 @@ export default function HomePage() {
       </section>
 
 
-      {/* 3. RUBRIK / CATEGORY */}
+      {/* 3. RUBRIK / CATEGORY - HIDDEN FOR NOW */}
+      {/* 
       <section className="py-16 bg-gray-50 border-y border-gray-200 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
@@ -191,44 +206,88 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      */}
 
 
       {/* 4. KHAZANAH */}
-      <section className="py-20 lg:py-32 bg-white relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-20 lg:py-32 xl:py-40 bg-linear-to-br from-slate-50 via-purple-50/30 to-white relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 sm:w-[500px] lg:w-[600px] h-80 sm:h-[500px] lg:h-[600px] bg-purple-200/40 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-60 sm:w-96 lg:w-[450px] h-60 sm:h-96 lg:h-[450px] bg-islamGreen/15 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/4 w-32 lg:w-48 h-32 lg:h-48 bg-purple-300/20 rounded-full blur-2xl" />
+        </div>
+
+        <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+           <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 xl:gap-28 items-center">
               
-              <div className="relative z-10">
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-sm font-bold mb-6">
-                  <BookOpen className="w-4 h-4" /> Khazanah Islam
-                </span>
-                <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-[1.1] mb-6">
-                  Menyelami Samudra <br/>
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-purple-400">
+              {/* Left Content */}
+              <div className="relative z-10 order-1 lg:order-1">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 lg:px-5 lg:py-2.5 rounded-full bg-purple-100/80 backdrop-blur-sm border border-purple-200/50 text-purple-700 text-sm lg:text-base font-semibold mb-6 lg:mb-8 shadow-sm">
+                  <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-purple-600 flex items-center justify-center">
+                    <BookOpen className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-white" />
+                  </div>
+                  Khazanah Islam
+                </div>
+                
+                {/* Title */}
+                <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-gray-900 leading-[1.1] mb-4 sm:mb-6 lg:mb-8">
+                  Menyelami Samudra
+                  <span className="block text-transparent bg-clip-text bg-linear-to-r from-purple-600 via-purple-500 to-indigo-500 mt-1 lg:mt-2">
                     Hikmah & Ilmu
                   </span>
                 </h2>
-                <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-md">
+                
+                {/* Description */}
+                <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed mb-6 sm:mb-8 lg:mb-10 max-w-lg lg:max-w-xl">
                   Kumpulan tafsir, hadits shahih, dan kisah inspiratif para sahabat untuk menyejukkan hati di tengah hiruk pikuk dunia.
                 </p>
                 
-                <div className="flex flex-col sm:flex-row gap-4">
+                {/* Stats mini */}
+                <div className="flex flex-wrap gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-10">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-10 h-10 lg:w-14 lg:h-14 rounded-xl lg:rounded-2xl bg-purple-100 flex items-center justify-center">
+                      <BookOpen className="w-5 h-5 lg:w-7 lg:h-7 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">200+</p>
+                      <p className="text-xs lg:text-sm text-gray-500">Tafsir & Hadits</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-10 h-10 lg:w-14 lg:h-14 rounded-xl lg:rounded-2xl bg-islamGreen/10 flex items-center justify-center">
+                      <Sparkles className="w-5 h-5 lg:w-7 lg:h-7 text-islamGreen" />
+                    </div>
+                    <div>
+                      <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">50+</p>
+                      <p className="text-xs lg:text-sm text-gray-500">Kisah Sahabat</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-5">
                   <Link href="/khazanah">
-                    <Button size="lg" className="rounded-full bg-purple-600 hover:bg-purple-700 text-white px-8 h-12">
+                    <Button size="lg" className="w-full sm:w-auto rounded-xl lg:rounded-2xl bg-purple-600 hover:bg-purple-700 text-white px-6 sm:px-8 lg:px-10 h-12 lg:h-14 lg:text-lg shadow-lg shadow-purple-600/25 hover:shadow-xl hover:shadow-purple-600/30 transition-all duration-300 hover:-translate-y-0.5">
+                      <BookOpen className="w-5 h-5 lg:w-6 lg:h-6 mr-2" />
                       Buka Pustaka
                     </Button>
                   </Link>
-                  <Button variant="ghost" className="rounded-full text-purple-700 hover:bg-purple-50 gap-2 h-12">
-                    <PlayCircle className="w-5 h-5" /> Video Kajian
+                  <Button variant="outline" className="w-full sm:w-auto rounded-xl lg:rounded-2xl border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 gap-2 h-12 lg:h-14 lg:text-lg lg:px-6 transition-all duration-300">
+                    <PlayCircle className="w-5 h-5 lg:w-6 lg:h-6" /> Video Kajian
                   </Button>
                 </div>
               </div>
 
-              <div className="relative">
-                 <div className="absolute -top-20 -right-20 w-72 h-72 bg-purple-200/30 rounded-full blur-3xl" />
-                 <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-islamGreen/20 rounded-full blur-3xl" />
+              {/* Right Carousel */}
+              <div className="relative order-2 lg:order-2">
+                 {/* Floating decorations */}
+                 <div className="absolute -top-6 -right-6 lg:-top-8 lg:-right-8 w-20 lg:w-28 h-20 lg:h-28 bg-islamGold/20 rounded-2xl lg:rounded-3xl rotate-12 blur-sm hidden sm:block" />
+                 <div className="absolute -bottom-4 -left-4 lg:-bottom-6 lg:-left-6 w-16 lg:w-24 h-16 lg:h-24 bg-purple-400/20 rounded-2xl lg:rounded-3xl -rotate-12 blur-sm hidden sm:block" />
                  
-                 <div className="relative bg-white/50 backdrop-blur-sm p-4 rounded-3xl border border-white/50 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                 {/* Main carousel container */}
+                 <div className="relative bg-white/60 backdrop-blur-md p-2 sm:p-3 lg:p-5 xl:p-6 rounded-2xl sm:rounded-3xl lg:rounded-[2rem] border border-white/60 shadow-2xl shadow-purple-500/10 transform lg:rotate-1 hover:rotate-0 transition-all duration-500">
                     <KhazanahCarousel items={khazanah} />
                  </div>
               </div>

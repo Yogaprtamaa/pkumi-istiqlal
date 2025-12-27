@@ -4,7 +4,7 @@
  */
 
 import Link from 'next/link';
-import { ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
+import { ArrowRight, Sparkles, TrendingUp, FileText, Users, PenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ArticleCard } from './ArticleCard';
 import { SITE_CONFIG } from '@/lib/constants';
@@ -57,7 +57,7 @@ export function HeroSection() {
           <div className="mt-6 sm:mt-8 flex justify-center gap-4 sm:gap-8 text-center">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-islamGreen/10">
-                <span className="text-sm sm:text-lg">📚</span>
+                <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-islamGreen" />
               </div>
               <div className="text-left">
                 <p className="text-base sm:text-xl font-bold text-gray-900">500+</p>
@@ -66,7 +66,7 @@ export function HeroSection() {
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2">
               <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-islamGreen/10">
-                <span className="text-sm sm:text-lg">👥</span>
+                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-islamGreen" />
               </div>
               <div className="text-left">
                 <p className="text-base sm:text-xl font-bold text-gray-900">100K+</p>
@@ -75,7 +75,7 @@ export function HeroSection() {
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2">
               <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-islamGreen/10">
-                <span className="text-sm sm:text-lg">✍️</span>
+                <PenLine className="h-4 w-4 sm:h-5 sm:w-5 text-islamGreen" />
               </div>
               <div className="text-left">
                 <p className="text-base sm:text-xl font-bold text-gray-900">50+</p>

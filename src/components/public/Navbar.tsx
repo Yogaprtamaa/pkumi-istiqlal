@@ -36,6 +36,19 @@ export function Navbar() {
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isSubmitMenuOpen, setIsSubmitMenuOpen] = React.useState(false);
   const [mobileExpandedMenu, setMobileExpandedMenu] = React.useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  // Detect scroll for navbar animation
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial scroll position
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Prevent body scroll when sidebar is open
   React.useEffect(() => {
@@ -86,7 +99,14 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-gray-100/80 bg-white/80 backdrop-blur-xl">
+      <header 
+        className={cn(
+          'sticky top-0 z-50 transition-all duration-300 ease-out',
+          isScrolled 
+            ? 'mx-auto mt-2 w-[95%] lg:w-[90%] max-w-6xl rounded-2xl bg-white/95 backdrop-blur-xl shadow-lg shadow-black/[0.08] border border-gray-200/60' 
+            : 'w-full bg-white/80 backdrop-blur-xl border-b border-gray-100/80'
+        )}
+      >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
