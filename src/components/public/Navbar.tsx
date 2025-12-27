@@ -4,38 +4,42 @@
  * Mobile: Sidebar dari kanan dengan smooth animation
  */
 
-'use client';
+"use client";
 
-import * as React from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { 
-  Menu, 
-  X, 
-  Search, 
-  ChevronDown, 
-  User, 
-  LogOut, 
-  PenSquare, 
+import * as React from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Menu,
+  X,
+  Search,
+  ChevronDown,
+  User,
+  LogOut,
+  PenSquare,
   BookOpen,
-  Plus
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { MENU_ITEMS, SITE_CONFIG } from '@/lib/constants';
-import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/AuthContext';
+  Plus,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { MENU_ITEMS, SITE_CONFIG } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Navbar() {
   const router = useRouter();
   const { user, isAuthenticated, logout, isLoading } = useAuth();
-  
+
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
-  const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = React.useState<string | null>(
+    null
+  );
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isSubmitMenuOpen, setIsSubmitMenuOpen] = React.useState(false);
-  const [mobileExpandedMenu, setMobileExpandedMenu] = React.useState<string | null>(null);
+  const [mobileExpandedMenu, setMobileExpandedMenu] = React.useState<
+    string | null
+  >(null);
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   // Detect scroll for navbar animation
@@ -43,31 +47,31 @@ export function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Check initial scroll position
-    
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Prevent body scroll when sidebar is open
   React.useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.height = '100%';
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.height = "100%";
     } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.height = '';
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
     }
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.height = '';
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
     };
   }, [isMenuOpen]);
 
@@ -75,18 +79,21 @@ export function Navbar() {
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('[data-user-menu]') && !target.closest('[data-submit-menu]')) {
+      if (
+        !target.closest("[data-user-menu]") &&
+        !target.closest("[data-submit-menu]")
+      ) {
         setIsUserMenuOpen(false);
         setIsSubmitMenuOpen(false);
       }
     };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   // Toggle mobile menu
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  
+
   // Toggle search bar
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
@@ -94,24 +101,24 @@ export function Navbar() {
   const handleLogout = () => {
     logout();
     setIsUserMenuOpen(false);
-    router.push('/');
+    router.push("/");
   };
 
   return (
     <>
-      <header 
+      <header
         className={cn(
-          'sticky top-0 z-50 transition-all duration-300 ease-out',
-          isScrolled 
-            ? 'mx-auto mt-2 w-[95%] lg:w-[90%] max-w-6xl rounded-2xl bg-white/95 backdrop-blur-xl shadow-lg shadow-black/[0.08] border border-gray-200/60' 
-            : 'w-full bg-white/80 backdrop-blur-xl border-b border-gray-100/80'
+          "sticky top-0 z-50 transition-all duration-300 ease-out",
+          isScrolled
+            ? "mx-auto mt-2 w-[95%] lg:w-[90%] max-w-6xl rounded-2xl bg-white/95 backdrop-blur-xl shadow-lg shadow-black/[0.08] border border-gray-200/60"
+            : "w-full bg-white/80 backdrop-blur-xl border-b border-gray-100/80"
         )}
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center gap-2.5 text-xl font-heading font-bold text-islamGreen transition-all duration-300 hover:text-islamGreen-dark hover:scale-105"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-islamGreen text-white shadow-md shadow-islamGreen/20">
@@ -126,7 +133,9 @@ export function Navbar() {
                 <div
                   key={item.label}
                   className="relative"
-                  onMouseEnter={() => item.children && setActiveDropdown(item.label)}
+                  onMouseEnter={() =>
+                    item.children && setActiveDropdown(item.label)
+                  }
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   {item.children ? (
@@ -134,17 +143,19 @@ export function Navbar() {
                     <>
                       <button
                         className={cn(
-                          'flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-islamGreen',
-                          activeDropdown === item.label && 'text-islamGreen'
+                          "flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-islamGreen",
+                          activeDropdown === item.label && "text-islamGreen"
                         )}
                       >
                         {item.label}
-                        <ChevronDown className={cn(
-                          'h-4 w-4 transition-transform duration-200',
-                          activeDropdown === item.label && 'rotate-180'
-                        )} />
+                        <ChevronDown
+                          className={cn(
+                            "h-4 w-4 transition-transform duration-200",
+                            activeDropdown === item.label && "rotate-180"
+                          )}
+                        />
                       </button>
-                      
+
                       {/* Dropdown Menu */}
                       {activeDropdown === item.label && (
                         <div className="absolute left-0 top-full w-48 rounded-lg bg-white py-2 shadow-lg ring-1 ring-black/5">
@@ -217,12 +228,14 @@ export function Navbar() {
                   >
                     <Plus className="h-4 w-4" />
                     Kirim
-                    <ChevronDown className={cn(
-                      'h-3 w-3 transition-transform',
-                      isSubmitMenuOpen && 'rotate-180'
-                    )} />
+                    <ChevronDown
+                      className={cn(
+                        "h-3 w-3 transition-transform",
+                        isSubmitMenuOpen && "rotate-180"
+                      )}
+                    />
                   </Button>
-                  
+
                   {isSubmitMenuOpen && (
                     <div className="absolute right-0 top-full mt-2 w-48 rounded-lg bg-white py-2 shadow-lg ring-1 ring-black/5">
                       <Link
@@ -260,31 +273,38 @@ export function Navbar() {
                           {user?.name?.charAt(0).toUpperCase()}
                         </div>
                         <span className="text-sm font-medium text-gray-700">
-                          {user?.name?.split(' ')[0]}
+                          {user?.name?.split(" ")[0]}
                         </span>
-                        <ChevronDown className={cn(
-                          'h-4 w-4 text-gray-500 transition-transform',
-                          isUserMenuOpen && 'rotate-180'
-                        )} />
+                        <ChevronDown
+                          className={cn(
+                            "h-4 w-4 text-gray-500 transition-transform",
+                            isUserMenuOpen && "rotate-180"
+                          )}
+                        />
                       </button>
-                      
+
                       {isUserMenuOpen && (
                         <div className="absolute right-0 top-full mt-2 w-56 rounded-lg bg-white py-2 shadow-lg ring-1 ring-black/5">
                           {/* User Info */}
                           <div className="border-b border-gray-100 px-4 py-3">
-                            <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                            <p className="text-xs text-gray-500">{user?.email}</p>
+                            <p className="text-sm font-medium text-gray-900">
+                              {user?.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {user?.email}
+                            </p>
                           </div>
-                          
+
                           <Link
-                            href={`/penulis/${user?.name?.toLowerCase().replace(/\s+/g, '-') || 'profile'}`}
+                            // href={`/penulis/${user?.name?.toLowerCase().replace(/\s+/g, '-') || 'profile'}`}
+                            href={`/penulis/ahmad-fauzi`} // Temporary static link for demo
                             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             onClick={() => setIsUserMenuOpen(false)}
                           >
                             <User className="h-4 w-4" />
                             Profil Saya
                           </Link>
-                          
+
                           <button
                             onClick={handleLogout}
                             className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
@@ -298,8 +318,8 @@ export function Navbar() {
                   ) : (
                     // Login Button
                     <Link href="/login" className="hidden md:block">
-                      <Button 
-                        variant="default" 
+                      <Button
+                        variant="default"
                         size="sm"
                         className="bg-islamGreen hover:bg-islamGreen-dark"
                       >
@@ -316,7 +336,7 @@ export function Navbar() {
                 size="icon"
                 className="md:hidden"
                 onClick={toggleMenu}
-                aria-label={isMenuOpen ? 'Tutup menu' : 'Buka menu'}
+                aria-label={isMenuOpen ? "Tutup menu" : "Buka menu"}
               >
                 {isMenuOpen ? (
                   <X className="h-5 w-5" />
@@ -331,22 +351,24 @@ export function Navbar() {
 
       {/* Mobile Sidebar Overlay */}
       {isMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm md:hidden"
           onClick={() => setIsMenuOpen(false)}
         />
       )}
 
       {/* Mobile Sidebar */}
-      <div className={cn(
-        "fixed right-0 top-0 z-[101] h-dvh w-80 max-w-[85vw] bg-white shadow-2xl transition-transform duration-300 ease-out md:hidden overflow-hidden",
-        isMenuOpen ? "translate-x-0" : "translate-x-full"
-      )}>
+      <div
+        className={cn(
+          "fixed right-0 top-0 z-[101] h-dvh w-80 max-w-[85vw] bg-white shadow-2xl transition-transform duration-300 ease-out md:hidden overflow-hidden",
+          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        )}
+      >
         <div className="flex h-full flex-col">
           {/* Sidebar Header */}
           <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4 bg-white">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center gap-2.5 text-lg font-heading font-bold text-islamGreen"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -375,12 +397,19 @@ export function Navbar() {
                     {user?.name?.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 truncate text-sm">{user?.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                    <p className="font-semibold text-gray-900 truncate text-sm">
+                      {user?.name}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {user?.email}
+                    </p>
                   </div>
                 </div>
                 <Link
-                  href={`/penulis/${user?.name?.toLowerCase().replace(/\s+/g, '-') || 'profile'}`}
+                  // href={`/penulis/${
+                  //   user?.name?.toLowerCase().replace(/\s+/g, "-") || "profile"
+                  // }`}
+                  href={`/penulis/ahmad-fauzi`} // Temporary static link for demo
                   className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -412,16 +441,24 @@ export function Navbar() {
                   {item.children ? (
                     <div className="space-y-0.5">
                       <button
-                        onClick={() => setMobileExpandedMenu(mobileExpandedMenu === item.label ? null : item.label)}
+                        onClick={() =>
+                          setMobileExpandedMenu(
+                            mobileExpandedMenu === item.label
+                              ? null
+                              : item.label
+                          )
+                        }
                         className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-islamGreen-pastel/30 hover:text-islamGreen-dark transition-colors"
                       >
                         <span>{item.label}</span>
-                        <ChevronDown className={cn(
-                          'h-4 w-4 transition-transform duration-200',
-                          mobileExpandedMenu === item.label && 'rotate-180'
-                        )} />
+                        <ChevronDown
+                          className={cn(
+                            "h-4 w-4 transition-transform duration-200",
+                            mobileExpandedMenu === item.label && "rotate-180"
+                          )}
+                        />
                       </button>
-                      
+
                       {/* Accordion Content */}
                       {mobileExpandedMenu === item.label && (
                         <div className="ml-2 space-y-0.5 animate-in slide-in-from-top-2 duration-200">
@@ -493,13 +530,24 @@ export function Navbar() {
               </Button>
             ) : (
               <div className="space-y-2.5">
-                <Link href="/login" onClick={() => setIsMenuOpen(false)} className="block">
+                <Link
+                  href="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block"
+                >
                   <Button className="w-full bg-islamGreen hover:bg-islamGreen-dark h-11 font-medium">
                     Masuk
                   </Button>
                 </Link>
-                <Link href="/register" onClick={() => setIsMenuOpen(false)} className="block">
-                  <Button variant="outline" className="w-full border-gray-300 hover:bg-gray-50 h-11 font-medium">
+                <Link
+                  href="/register"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block"
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full border-gray-300 hover:bg-gray-50 h-11 font-medium"
+                  >
                     Daftar Akun
                   </Button>
                 </Link>
