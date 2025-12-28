@@ -7,12 +7,16 @@
 'use client';
 
 import * as React from 'react';
+import { authService, ApiError } from '@/lib/api';
 
 interface User {
-  id: string;
+  id: number;
+  nim: string;
   name: string;
   email: string;
-  avatar?: string;
+  phone: string | null;
+  status: string;
+  image: string | null;
   role: 'user' | 'contributor' | 'admin';
 }
 
@@ -20,8 +24,8 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  login: (nim: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -32,56 +36,79 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Check for existing session on mount
   React.useEffect(() => {
-    const storedUser = localStorage.getItem('nurberita_user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        localStorage.removeItem('nurberita_user');
+    const initAuth = async () => {
+      const storedUser = localStorage.getItem('nurberita_user');
+      const token = authService.getToken();
+
+      if (storedUser && token) {
+        try {
+          // Validate token dengan get profile
+          const profile = await authService.getProfile();
+          const userData: User = {
+            ...profile,
+            role: 'contributor',
+          };
+          setUser(userData);
+          localStorage.setItem('nurberita_user', JSON.stringify(userData));
+        } catch (error) {
+          // Token invalid, clear storage
+          authService.clearToken();
+        }
+      } else {
+        // Clear jika tidak lengkap
+        authService.clearToken();
       }
-    }
-    setIsLoading(false);
+
+      setIsLoading(false);
+    };
+
+    initAuth();
   }, []);
 
-  // Mock login function - in production, this would call an API
-  const login = async (email: string, password: string): Promise<boolean> => {
+  // Login function dengan real API
+  const login = async (nim: string, password: string): Promise<boolean> => {
     setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock validation - accept any email/password for demo
-    if (email && password) {
-      const mockUser: User = {
-        id: '1',
-        name: email.split('@')[0],
-        email,
+
+    try {
+      const response = await authService.login({ nim, password });
+
+      const userData: User = {
+        ...response.student,
         role: 'contributor',
       };
-      
-      setUser(mockUser);
-      localStorage.setItem('nurberita_user', JSON.stringify(mockUser));
+
+      setUser(userData);
+      localStorage.setItem('nurberita_user', JSON.stringify(userData));
       setIsLoading(false);
       return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      setIsLoading(false);
+
+      if (error instanceof ApiError) {
+        // Handle specific API errors
+        return false;
+      }
+
+      return false;
     }
-    
-    setIsLoading(false);
-    return false;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    setIsLoading(true);
+    await authService.logout();
     setUser(null);
-    localStorage.removeItem('nurberita_user');
+    setIsLoading(false);
   };
 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        isAuthenticated: !!user, 
-        isLoading, 
-        login, 
-        logout 
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        login,
+        logout
       }}
     >
       {children}

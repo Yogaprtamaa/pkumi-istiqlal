@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { Eye, EyeOff, User as UserIcon, Lock, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -15,7 +15,7 @@ export default function LoginClient() {
   const searchParams = useSearchParams();
   const { login, isLoading, isAuthenticated } = useAuth();
 
-  const [email, setEmail] = React.useState("");
+  const [nim, setNim] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -34,18 +34,18 @@ export default function LoginClient() {
     setError("");
     setIsSubmitting(true);
 
-    if (!email || !password) {
-      setError("Mohon isi email dan password");
+    if (!nim || !password) {
+      setError("Mohon isi NIM dan password");
       setIsSubmitting(false);
       return;
     }
 
-    const success = await login(email, password);
+    const success = await login(nim, password);
 
     if (success) {
       router.push(redirectTo);
     } else {
-      setError("Email atau password tidak valid");
+      setError("NIM atau password tidak valid");
     }
 
     setIsSubmitting(false);
@@ -130,22 +130,22 @@ export default function LoginClient() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email Field */}
+              {/* NIM Field */}
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="nim"
                   className="mb-2 block text-sm font-semibold text-gray-700"
                 >
-                  Email
+                  NIM
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                  <UserIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                   <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="nama@email.com"
+                    id="nim"
+                    type="text"
+                    value={nim}
+                    onChange={(e) => setNim(e.target.value)}
+                    placeholder="20230001"
                     className="pl-12 h-12 rounded-xl border-gray-200 focus:border-islamGreen focus:ring-islamGreen"
                     disabled={isSubmitting}
                   />
@@ -242,10 +242,10 @@ export default function LoginClient() {
         {/* Demo Credentials */}
         <div className="mt-8 rounded-2xl border border-dashed border-gray-300 bg-gray-50/80 p-5 text-center">
           <p className="font-semibold text-gray-700 flex items-center justify-center gap-2">
-            <span className="text-lg">🔑</span> Demo Mode
+            <span className="text-lg">🔑</span> Demo Credentials
           </p>
           <p className="mt-2 text-sm text-gray-500">
-            Gunakan email dan password apa saja untuk masuk
+            NIM: <span className="font-mono font-semibold">20230001</span> | Password: <span className="font-mono font-semibold">password123</span>
           </p>
         </div>
       </div>

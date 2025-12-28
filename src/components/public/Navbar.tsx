@@ -291,7 +291,7 @@ export function Navbar() {
                               {user?.name}
                             </p>
                             <p className="text-xs text-gray-500">
-                              {user?.email}
+                              NIM: {user?.nim}
                             </p>
                           </div>
 
@@ -401,7 +401,7 @@ export function Navbar() {
                       {user?.name}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
-                      {user?.email}
+                      NIM: {user?.nim}
                     </p>
                   </div>
                 </div>
