@@ -157,3 +157,56 @@ export interface KhazanahQueryParams {
   search?: string;
   page?: number;
 }
+
+// Artikel interfaces (similar structure to Khazanah)
+export interface ArtikelStudent {
+  id: number;
+  name: string;
+  nim: string;
+}
+
+export interface ArtikelCategory {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface ArtikelItem {
+  id: number;
+  student_id: number;
+  category_id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content?: string;
+  tags: string;
+  thumbnail: string | null;
+  status: string;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  student: ArtikelStudent;
+  category: ArtikelCategory;
+  views?: number;
+  read_time?: number;
+}
+
+export interface ArtikelData extends PaginationMeta {
+  data: ArtikelItem[];
+}
+
+export interface ArtikelResponse {
+  code: number;
+  status: string;
+  message: string;
+  data: ArtikelData;
+}
+
+export interface ArtikelQueryParams {
+  category_id?: number;
+  per_page?: number;
+  all?: boolean;
+  search?: string;
+  page?: number;
+}

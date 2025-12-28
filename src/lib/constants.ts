@@ -31,14 +31,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     label: 'Rubrik',
-    href: '#',
-    children: [
-      { label: 'Akhlak', href: '/rubrik/akhlak' },
-      { label: 'Fiqih', href: '/rubrik/fiqih' },
-      { label: 'Tazkiyatun Nafs', href: '/rubrik/tazkiyatun-nafs' },
-      { label: 'Keluarga', href: '/rubrik/keluarga' },
-      { label: 'Muamalah', href: '/rubrik/muamalah' },
-    ],
+    href: '/rubrik',
   },
   {
     label: 'Khazanah',

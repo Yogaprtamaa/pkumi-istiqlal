@@ -24,5 +24,8 @@ export const API_ENDPOINTS = {
   khazanah: {
     published: '/api/khazanah/published',
   },
+  artikel: {
+    published: '/api/artikel/published',
+  },
   // Tambahkan endpoints lainnya di sini
 } as const;

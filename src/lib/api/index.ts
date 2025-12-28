@@ -9,3 +9,4 @@ export * from './types';
 export * from './services/auth.service';
 export * from './services/category.service';
 export * from './services/khazanah.service';
+export * from './services/artikel.service';
