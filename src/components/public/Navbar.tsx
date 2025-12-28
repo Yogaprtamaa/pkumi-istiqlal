@@ -296,8 +296,7 @@ export function Navbar() {
                           </div>
 
                           <Link
-                            // href={`/penulis/${user?.name?.toLowerCase().replace(/\s+/g, '-') || 'profile'}`}
-                            href={`/penulis/ahmad-fauzi`} // Temporary static link for demo
+                            href={`/penulis/${user?.nim || 'profile'}`}
                             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             onClick={() => setIsUserMenuOpen(false)}
                           >
@@ -406,10 +405,7 @@ export function Navbar() {
                   </div>
                 </div>
                 <Link
-                  // href={`/penulis/${
-                  //   user?.name?.toLowerCase().replace(/\s+/g, "-") || "profile"
-                  // }`}
-                  href={`/penulis/ahmad-fauzi`} // Temporary static link for demo
+                  href={`/penulis/${user?.nim || 'profile'}`}
                   className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
