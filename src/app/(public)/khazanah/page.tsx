@@ -6,14 +6,16 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { BookOpen, BookMarked, HandHeart, Users, Search, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { khazanah } from '@/lib/mockData';
+import { categoryService } from '@/lib/api/services/category.service';
+import { khazanahService } from '@/lib/api/services/khazanah.service';
+import type { Category, KhazanahItem } from '@/lib/api/types';
 
 // Icon mapping untuk setiap type
 const typeIcons = {
@@ -23,50 +25,104 @@ const typeIcons = {
   kisah: Users,
 };
 
-// Label mapping untuk setiap type
-const typeLabels = {
-  tafsir: 'Tafsir',
-  hadits: 'Hadits',
-  doa: 'Doa',
-  kisah: 'Kisah',
-};
-
 // Warna mapping untuk setiap type
 const typeColors = {
   tafsir: '#2E7D32',
   hadits: '#1565C0',
+  fiqih: '#1565C0',
   doa: '#6A1B9A',
   kisah: '#EF6C00',
+  opini: '#EF6C00',
+  'pemikiran-ulama': '#6A1B9A',
+  'sejarah-islam': '#C62828',
 };
 
 const ITEMS_PER_PAGE = 6;
 
 export default function KhazanahPage() {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState(''); // For input display
   const [currentPage, setCurrentPage] = useState(1);
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [expandedItems, setExpandedItems] = useState<number[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [khazanahItems, setKhazanahItems] = useState<KhazanahItem[]>([]);
+  const [isLoadingKhazanah, setIsLoadingKhazanah] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
-  // Filter khazanah
-  const filteredKhazanah = useMemo(() => {
-    return khazanah.filter((item) => {
-      const matchType = activeFilter === 'all' || item.type === activeFilter;
-      const matchSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchType && matchSearch;
-    });
-  }, [activeFilter, searchQuery]);
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoadingCategories(true);
+        const data = await categoryService.getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
 
-  // Pagination
-  const totalPages = Math.ceil(filteredKhazanah.length / ITEMS_PER_PAGE);
-  const paginatedKhazanah = filteredKhazanah.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+    fetchCategories();
+  }, []);
+
+  // Debounce search input - only apply if 3+ characters or empty
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Only set searchQuery if input is empty or has 3+ characters
+      if (searchInput.trim() === '' || searchInput.trim().length >= 3) {
+        setSearchQuery(searchInput.trim());
+      }
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Fetch khazanah data whenever filters change
+  useEffect(() => {
+    const fetchKhazanah = async () => {
+      try {
+        setIsLoadingKhazanah(true);
+
+        // Find category ID from slug if filter is not 'all'
+        let categoryId: number | undefined;
+        if (activeFilter !== 'all') {
+          const category = categories.find(cat => cat.slug === activeFilter);
+          categoryId = category?.id;
+        }
+
+        const response = await khazanahService.getPublishedKhazanah({
+          category_id: categoryId,
+          per_page: ITEMS_PER_PAGE,
+          search: searchQuery || undefined,
+          page: currentPage,
+        });
+
+        setKhazanahItems(response.data.data);
+        setTotalPages(response.data.last_page);
+        setTotalItems(response.data.total);
+      } catch (error) {
+        console.error('Failed to fetch khazanah:', error);
+        setKhazanahItems([]);
+        setTotalPages(1);
+        setTotalItems(0);
+      } finally {
+        setIsLoadingKhazanah(false);
+      }
+    };
+
+    // Only fetch if categories are loaded (to get category_id)
+    if (!isLoadingCategories) {
+      fetchKhazanah();
+    }
+  }, [activeFilter, searchQuery, currentPage, categories, isLoadingCategories]);
 
   // Toggle expand item
-  const toggleExpand = (id: string) => {
-    setExpandedItems(prev => 
+  const toggleExpand = (id: number) => {
+    setExpandedItems(prev =>
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
   };
@@ -84,6 +140,16 @@ export default function KhazanahPage() {
       setCurrentPage(prev => prev - 1);
       document.getElementById('khazanah-grid')?.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    setCurrentPage(1); // Reset to page 1 when filter changes
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchInput(value);
+    setCurrentPage(1); // Reset to page 1 when search changes
   };
 
   return (
@@ -118,7 +184,7 @@ export default function KhazanahPage() {
           <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
             <Button
               variant={activeFilter === 'all' ? 'default' : 'secondary'}
-              onClick={() => { setActiveFilter('all'); setCurrentPage(1); }}
+              onClick={() => handleFilterChange('all')}
               size="sm"
               className={`rounded-full px-4 sm:px-6 text-xs sm:text-sm transition-all ${
                 activeFilter === 'all'
@@ -129,74 +195,114 @@ export default function KhazanahPage() {
               Semua
             </Button>
 
-            {Object.entries(typeLabels).map(([type, label]) => {
-              const Icon = typeIcons[type as keyof typeof typeIcons];
-              const color = typeColors[type as keyof typeof typeColors];
-              return (
-                <Button
-                  key={type}
-                  variant={activeFilter === type ? 'default' : 'outline'}
-                  onClick={() => { setActiveFilter(type); setCurrentPage(1); }}
-                  size="sm"
-                  className={`rounded-full px-3 sm:px-5 text-xs sm:text-sm border transition-all gap-1.5 ${
-                    activeFilter === type
-                      ? 'text-white border-transparent'
-                      : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-transparent'
-                  }`}
-                  style={activeFilter === type ? { backgroundColor: color } : {}}
-                >
-                  <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                  <span>{label}</span>
-                </Button>
-              );
-            })}
+            {isLoadingCategories ? (
+              // Loading skeleton for categories
+              Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-8 sm:h-9 w-20 sm:w-24 bg-gray-200 rounded-full animate-pulse"
+                />
+              ))
+            ) : (
+              categories.map((category) => {
+                // Map category slug to icon (fallback to BookOpen if not found)
+                const iconKey = category.slug as keyof typeof typeIcons;
+                const Icon = typeIcons[iconKey] || BookOpen;
+
+                // Map category slug to color (fallback to islamGreen if not found)
+                const colorKey = category.slug as keyof typeof typeColors;
+                const color = typeColors[colorKey] || '#2E7D32';
+
+                return (
+                  <Button
+                    key={category.id}
+                    variant={activeFilter === category.slug ? 'default' : 'outline'}
+                    onClick={() => handleFilterChange(category.slug)}
+                    size="sm"
+                    className={`rounded-full px-3 sm:px-5 text-xs sm:text-sm border transition-all gap-1.5 ${
+                      activeFilter === category.slug
+                        ? 'text-white border-transparent'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-transparent'
+                    }`}
+                    style={activeFilter === category.slug ? { backgroundColor: color } : {}}
+                  >
+                    <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    <span>{category.name}</span>
+                  </Button>
+                );
+              })
+            )}
           </div>
 
           {/* Search Input */}
           <div className="relative w-full lg:w-72 xl:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
-              placeholder="Cari khazanah..."
-              value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              placeholder="Cari khazanah... (min. 3 karakter)"
+              value={searchInput}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="pl-10 rounded-full border-gray-200 bg-gray-50 focus:bg-white transition-all h-10 sm:h-11 text-sm"
             />
+            {searchInput.trim().length > 0 && searchInput.trim().length < 3 && (
+              <p className="absolute -bottom-5 left-0 text-xs text-gray-500 mt-1">
+                Minimal 3 karakter untuk mencari
+              </p>
+            )}
           </div>
         </div>
 
         {/* KHAZANAH GRID */}
-        {paginatedKhazanah.length > 0 ? (
+        {isLoadingKhazanah ? (
+          // Loading skeleton
+          <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+              <div key={index} className="space-y-4">
+                <div className="aspect-video bg-gray-200 rounded-lg animate-pulse" />
+                <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                <div className="h-20 bg-gray-200 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        ) : khazanahItems.length > 0 ? (
           <>
             <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {paginatedKhazanah.map((item) => {
-                const Icon = typeIcons[item.type as keyof typeof typeIcons];
-                const color = typeColors[item.type as keyof typeof typeColors];
+              {khazanahItems.map((item) => {
+                const iconKey = item.category.slug as keyof typeof typeIcons;
+                const Icon = typeIcons[iconKey] || BookOpen;
+                const colorKey = item.category.slug as keyof typeof typeColors;
+                const color = typeColors[colorKey] || '#2E7D32';
                 const isExpanded = expandedItems.includes(item.id);
 
                 return (
-                  <Card 
+                  <Card
                     key={item.id}
                     className="group overflow-hidden border-0 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
                     {/* Image */}
-                    <div className="relative aspect-video overflow-hidden">
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
+                    <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                      {item.thumbnail ? (
+                        <Image
+                          src={item.thumbnail}
+                          alt={item.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Icon className="w-16 h-16 text-gray-400" />
+                        </div>
+                      )}
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
-                      
+
                       {/* Badge */}
                       <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                        <Badge 
+                        <Badge
                           className="border-0 font-semibold shadow-md backdrop-blur-sm text-xs gap-1"
                           style={{ backgroundColor: color }}
                         >
                           <Icon className="h-3 w-3" />
-                          {typeLabels[item.type as keyof typeof typeLabels]}
+                          {item.category.name}
                         </Badge>
                       </div>
 
@@ -210,32 +316,45 @@ export default function KhazanahPage() {
 
                     <CardContent className="p-4 sm:p-5">
                       {/* Excerpt */}
-                      <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-3 sm:mb-4 leading-relaxed">
-                        {item.excerpt}
+                      <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">
+                        {isExpanded ? item.excerpt : item.excerpt.slice(0, 150) + (item.excerpt.length > 150 ? '...' : '')}
                       </p>
-                      
-                      {/* Content - Expandable */}
-                      <div 
-                        className={`prose prose-sm prose-islamGreen max-w-none text-gray-700 text-xs sm:text-sm overflow-hidden transition-all duration-300 ${
-                          isExpanded ? 'max-h-96' : 'max-h-20 sm:max-h-24'
-                        }`}
-                        dangerouslySetInnerHTML={{ __html: item.content }}
-                      />
+
+                      {/* Tags */}
+                      {item.tags && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {item.tags.split(',').slice(0, 3).map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full"
+                            >
+                              {tag.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      )}
 
                       {/* Expand Button */}
                       <button
                         onClick={() => toggleExpand(item.id)}
-                        className="mt-3 flex items-center gap-1 text-xs font-medium text-islamGreen hover:text-islamGreen-dark transition-colors"
+                        className="mt-2 flex items-center gap-1 text-xs font-medium text-islamGreen hover:text-islamGreen-dark transition-colors"
                       >
                         {isExpanded ? 'Tutup' : 'Baca Selengkapnya'}
                         <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
                       </button>
 
-                      {/* Source */}
-                      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
-                        <p className="text-[10px] sm:text-xs text-gray-500">
-                          <span className="font-medium text-gray-700">Sumber:</span> {item.source}
-                        </p>
+                      {/* Author & Date */}
+                      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100 flex items-center justify-between text-[10px] sm:text-xs text-gray-500">
+                        <span>
+                          <span className="font-medium text-gray-700">Penulis:</span> {item.student.name}
+                        </span>
+                        <span>
+                          {new Date(item.published_at).toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                          })}
+                        </span>
                       </div>
                     </CardContent>
                   </Card>
@@ -291,7 +410,9 @@ export default function KhazanahPage() {
             <p className="text-sm sm:text-base text-gray-500 px-4">
               Maaf, tidak ada khazanah untuk kategori{' '}
               <span className="font-bold">
-                &quot;{activeFilter === 'all' ? 'Semua' : typeLabels[activeFilter as keyof typeof typeLabels]}&quot;
+                &quot;{activeFilter === 'all'
+                  ? 'Semua'
+                  : categories.find(cat => cat.slug === activeFilter)?.name || activeFilter}&quot;
               </span>
               {searchQuery && (
                 <span> dengan kata kunci &quot;{searchQuery}&quot;</span>
@@ -302,6 +423,7 @@ export default function KhazanahPage() {
               onClick={() => {
                 setActiveFilter('all');
                 setSearchQuery('');
+                setSearchInput('');
               }}
               className="text-islamGreen mt-4 text-sm"
             >

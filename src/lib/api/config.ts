@@ -18,5 +18,11 @@ export const API_ENDPOINTS = {
     profile: '/api/student/profile',
     changePassword: '/api/student/change-password',
   },
+  categories: {
+    list: '/api/categories',
+  },
+  khazanah: {
+    published: '/api/khazanah/published',
+  },
   // Tambahkan endpoints lainnya di sini
 } as const;
