@@ -28,11 +28,14 @@ import {
   Star,
   Verified,
   PenLine,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/components/public/ArticleCard";
+import { ChangePasswordDialog } from "@/components/public/ChangePasswordDialog";
+import { useAuth } from "@/contexts/AuthContext";
 import type { Article } from "@/types";
 
 // Type untuk data penulis
@@ -152,6 +155,10 @@ interface ProfileContentProps {
 export function ProfileContent({ author, authorArticles }: ProfileContentProps) {
   const setRef = useScrollReveal();
   const [isHovered, setIsHovered] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+
+  // Check if current logged in user is viewing their own profile
+  const isOwnProfile = isAuthenticated && user?.id === parseInt(author.id);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-gray-50 via-white to-gray-50/50">
@@ -392,15 +399,26 @@ export function ProfileContent({ author, authorArticles }: ProfileContentProps) 
 
                   {/* Social Media & Contact Buttons - Enhanced */}
                   <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                    <Button
-                      className="rounded-full gap-2.5 bg-linear-to-r from-islamGreen to-emerald-600 hover:from-islamGreen-dark hover:to-emerald-700 text-white shadow-xl shadow-islamGreen/30 hover:shadow-2xl hover:shadow-islamGreen/40 hover:scale-105 transition-all duration-300 px-6"
-                      asChild
-                    >
-                      <a href={`mailto:${author.email}`}>
-                        <Mail className="h-4 w-4" />
-                        Hubungi Saya
-                      </a>
-                    </Button>
+                    {isOwnProfile ? (
+                      <ChangePasswordDialog
+                        trigger={
+                          <Button className="rounded-full gap-2.5 bg-linear-to-r from-islamGreen to-emerald-600 hover:from-islamGreen-dark hover:to-emerald-700 text-white shadow-xl shadow-islamGreen/30 hover:shadow-2xl hover:shadow-islamGreen/40 hover:scale-105 transition-all duration-300 px-6">
+                            <Lock className="h-4 w-4" />
+                            Ubah Password
+                          </Button>
+                        }
+                      />
+                    ) : (
+                      <Button
+                        className="rounded-full gap-2.5 bg-linear-to-r from-islamGreen to-emerald-600 hover:from-islamGreen-dark hover:to-emerald-700 text-white shadow-xl shadow-islamGreen/30 hover:shadow-2xl hover:shadow-islamGreen/40 hover:scale-105 transition-all duration-300 px-6"
+                        asChild
+                      >
+                        <a href={`mailto:${author.email}`}>
+                          <Mail className="h-4 w-4" />
+                          Hubungi Saya
+                        </a>
+                      </Button>
+                    )}
 
                     {author.socialMedia?.twitter && (
                       <Button

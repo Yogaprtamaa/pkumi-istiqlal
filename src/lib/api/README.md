@@ -52,7 +52,22 @@ try {
 }
 ```
 
-### 4. Logout
+### 4. Change Password (dengan auth)
+
+```typescript
+try {
+  await authService.changePassword({
+    current_password: 'oldpassword123',
+    password: 'newpassword123',
+    password_confirmation: 'newpassword123'
+  });
+  console.log('Password changed successfully');
+} catch (error) {
+  console.error('Failed to change password');
+}
+```
+
+### 5. Logout
 
 ```typescript
 await authService.logout();

@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
     login: '/api/student/login',
     logout: '/api/student/logout',
     profile: '/api/student/profile',
+    changePassword: '/api/student/change-password',
   },
   // Tambahkan endpoints lainnya di sini
 } as const;

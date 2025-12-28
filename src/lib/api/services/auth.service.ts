@@ -5,7 +5,7 @@
 
 import { apiClient } from '../client';
 import { API_ENDPOINTS } from '../config';
-import type { LoginRequest, LoginResponse, Student } from '../types';
+import type { LoginRequest, LoginResponse, Student, ProfileResponse, ChangePasswordRequest, ChangePasswordResponse } from '../types';
 
 class AuthService {
   /**
@@ -45,7 +45,7 @@ class AuthService {
    * Get user profile
    */
   async getProfile(): Promise<Student> {
-    const response = await apiClient.get<{ data: { student: Student } }>(
+    const response = await apiClient.get<ProfileResponse>(
       API_ENDPOINTS.auth.profile,
       true
     );
@@ -86,6 +86,17 @@ class AuthService {
    */
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  /**
+   * Change password
+   */
+  async changePassword(data: ChangePasswordRequest): Promise<ChangePasswordResponse> {
+    return apiClient.post<ChangePasswordResponse>(
+      API_ENDPOINTS.auth.changePassword,
+      data,
+      true
+    );
   }
 }
 
