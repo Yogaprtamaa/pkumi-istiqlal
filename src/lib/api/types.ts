@@ -26,6 +26,13 @@ export interface Student {
   city: string | null;
   province: string | null;
   full_address: string | null;
+  // Article counts
+  khazanah_draft_count?: number;
+  khazanah_published_count?: number;
+  khazanah_archived_count?: number;
+  rubrik_draft_count?: number;
+  rubrik_published_count?: number;
+  rubrik_archived_count?: number;
 }
 
 export interface LoginResponse {

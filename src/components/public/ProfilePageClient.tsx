@@ -32,6 +32,8 @@ export function ProfilePageClient({ slug }: ProfilePageClientProps) {
       if (isOwnProfile) {
         // User melihat profile sendiri - gunakan data dari AuthContext
         // Data ini sudah di-fetch dari API saat login/mount
+        const totalPublished = (user.khazanah_published_count || 0) + (user.rubrik_published_count || 0);
+
         const authorData: Author = {
           id: user.id.toString(),
           name: user.name,
@@ -47,10 +49,17 @@ export function ProfilePageClient({ slug }: ProfilePageClientProps) {
             // TODO: Tambahkan field social media di API jika ada
           },
           stats: {
-            articles: 0, // TODO: fetch from articles API
+            articles: totalPublished,
             views: 0,
             likes: 0,
           },
+          // Article counts
+          khazanah_draft_count: user.khazanah_draft_count,
+          khazanah_published_count: user.khazanah_published_count,
+          khazanah_archived_count: user.khazanah_archived_count,
+          rubrik_draft_count: user.rubrik_draft_count,
+          rubrik_published_count: user.rubrik_published_count,
+          rubrik_archived_count: user.rubrik_archived_count,
         };
 
         setAuthor(authorData);

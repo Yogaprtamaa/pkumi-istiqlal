@@ -60,6 +60,13 @@ export interface Author {
     views: number;
     likes: number;
   };
+  // Article counts
+  khazanah_draft_count?: number;
+  khazanah_published_count?: number;
+  khazanah_archived_count?: number;
+  rubrik_draft_count?: number;
+  rubrik_published_count?: number;
+  rubrik_archived_count?: number;
 }
 
 // Hook untuk animasi scroll reveal
@@ -503,9 +510,126 @@ export function ProfileContent({ author, authorArticles }: ProfileContentProps) 
           </Card>
         </div>
 
+        {/* Article Statistics Section */}
+        {(author.khazanah_draft_count !== undefined || author.rubrik_draft_count !== undefined) && (
+          <div
+            ref={setRef(1)}
+            className="mb-10 sm:mb-14 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-200"
+          >
+            <Card className="overflow-hidden border-0 shadow-xl bg-white">
+              <CardContent className="p-6 sm:p-8">
+                <div className="mb-6">
+                  <h2 className="font-heading text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="p-2.5 bg-linear-to-br from-islamGreen to-emerald-600 rounded-xl shadow-lg shadow-islamGreen/25">
+                      <FileText className="h-6 w-6 text-white" />
+                    </div>
+                    Statistik Artikel
+                  </h2>
+                  <p className="text-sm sm:text-base text-gray-600 mt-2">
+                    Ringkasan artikel Khazanah dan Rubrik yang kamu buat
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Khazanah Stats */}
+                  <div className="p-5 rounded-xl bg-linear-to-br from-blue-50 to-cyan-50 border-2 border-blue-100 hover:border-blue-200 transition-all duration-300 hover:shadow-lg">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2.5 bg-blue-500 rounded-lg shadow-md">
+                        <BookOpen className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="font-semibold text-lg text-gray-900">Khazanah</h3>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <div className="text-2xl font-bold text-yellow-600">
+                          {author.khazanah_draft_count || 0}
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1 font-medium">Draft</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <div className="text-2xl font-bold text-green-600">
+                          {author.khazanah_published_count || 0}
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1 font-medium">Published</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <div className="text-2xl font-bold text-gray-600">
+                          {author.khazanah_archived_count || 0}
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1 font-medium">Archived</div>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-blue-200">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">Total</span>
+                        <span className="text-xl font-bold text-blue-600">
+                          {(author.khazanah_draft_count || 0) + (author.khazanah_published_count || 0) + (author.khazanah_archived_count || 0)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Rubrik Stats */}
+                  <div className="p-5 rounded-xl bg-linear-to-br from-purple-50 to-pink-50 border-2 border-purple-100 hover:border-purple-200 transition-all duration-300 hover:shadow-lg">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2.5 bg-purple-500 rounded-lg shadow-md">
+                        <PenLine className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="font-semibold text-lg text-gray-900">Rubrik</h3>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <div className="text-2xl font-bold text-yellow-600">
+                          {author.rubrik_draft_count || 0}
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1 font-medium">Draft</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <div className="text-2xl font-bold text-green-600">
+                          {author.rubrik_published_count || 0}
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1 font-medium">Published</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <div className="text-2xl font-bold text-gray-600">
+                          {author.rubrik_archived_count || 0}
+                        </div>
+                        <div className="text-xs text-gray-600 mt-1 font-medium">Archived</div>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-purple-200">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">Total</span>
+                        <span className="text-xl font-bold text-purple-600">
+                          {(author.rubrik_draft_count || 0) + (author.rubrik_published_count || 0) + (author.rubrik_archived_count || 0)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Grand Total */}
+                <div className="mt-6 p-5 rounded-xl bg-linear-to-br from-islamGreen/10 to-emerald-500/10 border-2 border-islamGreen/20">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 bg-islamGreen rounded-lg shadow-md">
+                        <TrendingUp className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="text-lg font-semibold text-gray-900">Total Semua Artikel</span>
+                    </div>
+                    <span className="text-3xl font-bold bg-linear-to-r from-islamGreen to-emerald-600 bg-clip-text text-transparent">
+                      {(author.khazanah_draft_count || 0) + (author.khazanah_published_count || 0) + (author.khazanah_archived_count || 0) + (author.rubrik_draft_count || 0) + (author.rubrik_published_count || 0) + (author.rubrik_archived_count || 0)}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Articles Section - Enhanced */}
-        <div 
-          ref={setRef(1)}
+        <div
+          ref={setRef(2)}
           className="pb-16 sm:pb-20 lg:pb-24 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-200"
         >
           {/* Section Header - Enhanced */}
@@ -543,7 +667,7 @@ export function ProfileContent({ author, authorArticles }: ProfileContentProps) 
               {authorArticles.map((article, index) => (
                 <div
                   key={article.id}
-                  ref={setRef(index + 2)}
+                  ref={setRef(index + 3)}
                   className="opacity-0 translate-y-4 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-500"
                   style={{ transitionDelay: `${(index + 1) * 100}ms` }}
                 >

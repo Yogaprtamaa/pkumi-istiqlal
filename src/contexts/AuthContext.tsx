@@ -18,6 +18,13 @@ interface User {
   status: string;
   image: string | null;
   role: 'user' | 'contributor' | 'admin';
+  // Article counts
+  khazanah_draft_count?: number;
+  khazanah_published_count?: number;
+  khazanah_archived_count?: number;
+  rubrik_draft_count?: number;
+  rubrik_published_count?: number;
+  rubrik_archived_count?: number;
 }
 
 interface AuthContextType {
