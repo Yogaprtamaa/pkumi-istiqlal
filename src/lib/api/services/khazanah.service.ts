@@ -5,7 +5,7 @@
 
 import { apiClient } from '../client';
 import { API_ENDPOINTS } from '../config';
-import type { KhazanahResponse, KhazanahItem, KhazanahQueryParams } from '../types';
+import type { KhazanahResponse, KhazanahItem, KhazanahQueryParams, KhazanahDetailResponse, KhazanahDetail } from '../types';
 
 class KhazanahService {
   /**
@@ -50,6 +50,26 @@ class KhazanahService {
   async getPublishedKhazanahItems(params: KhazanahQueryParams = {}): Promise<KhazanahItem[]> {
     const response = await this.getPublishedKhazanah(params);
     return response.data.data;
+  }
+
+  /**
+   * Get khazanah detail by slug
+   * @param slug - Khazanah slug
+   */
+  async getKhazanahBySlug(slug: string): Promise<KhazanahDetail> {
+    const url = `${API_ENDPOINTS.khazanah.detail}/${slug}`;
+    const response = await apiClient.get<KhazanahDetailResponse>(url);
+
+    // Extract content from trix_rich_texts array
+    const khazanahData = response.data;
+    if (khazanahData.trix_rich_texts && khazanahData.trix_rich_texts.length > 0) {
+      const contentItem = khazanahData.trix_rich_texts.find(item => item.field === 'content');
+      if (contentItem) {
+        khazanahData.content = contentItem.content;
+      }
+    }
+
+    return khazanahData;
   }
 }
 

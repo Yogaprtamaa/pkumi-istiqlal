@@ -139,6 +139,14 @@ export interface KhazanahItem {
   category: KhazanahCategory;
 }
 
+export interface KhazanahDetail extends KhazanahItem {
+  views?: number;
+  author?: string | null;
+  trix_rich_texts?: TrixRichText[];
+  tags_array?: string[];
+  content?: string; // Processed content from trix_rich_texts
+}
+
 export interface KhazanahData extends PaginationMeta {
   data: KhazanahItem[];
 }
@@ -148,6 +156,13 @@ export interface KhazanahResponse {
   status: string;
   message: string;
   data: KhazanahData;
+}
+
+export interface KhazanahDetailResponse {
+  code: number;
+  status: string;
+  message: string;
+  data: KhazanahDetail;
 }
 
 export interface KhazanahQueryParams {
@@ -209,4 +224,78 @@ export interface ArtikelQueryParams {
   all?: boolean;
   search?: string;
   page?: number;
+}
+
+// Rubrik interfaces (similar structure to Khazanah and Artikel)
+export interface RubrikStudent {
+  id: number;
+  name: string;
+  nim: string;
+  email?: string;
+}
+
+export interface RubrikCategory {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface TrixRichText {
+  id: number;
+  field: string;
+  content: string;
+  record_type: string;
+  record_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RubrikItem {
+  id: number;
+  student_id: number;
+  category_id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  tags: string;
+  thumbnail: string | null;
+  status: string;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  student: RubrikStudent;
+  category: RubrikCategory;
+}
+
+export interface RubrikDetail extends RubrikItem {
+  trix_rich_texts?: TrixRichText[];
+  tags_array?: string[];
+  content?: string; // Processed content from trix_rich_texts
+}
+
+export interface RubrikData extends PaginationMeta {
+  data: RubrikItem[];
+}
+
+export interface RubrikResponse {
+  code: number;
+  status: string;
+  message: string;
+  data: RubrikData;
+}
+
+export interface RubrikQueryParams {
+  category_id?: number;
+  per_page?: number;
+  all?: boolean;
+  search?: string;
+  page?: number;
+}
+
+export interface RubrikDetailResponse {
+  code: number;
+  status: string;
+  message: string;
+  data: RubrikDetail;
 }

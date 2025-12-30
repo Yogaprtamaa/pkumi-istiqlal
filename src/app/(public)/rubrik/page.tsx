@@ -7,14 +7,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BookOpen, Search } from 'lucide-react';
+import { BookOpen, Search, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArticleCard } from '@/components/public/ArticleCard';
-import { categoryService } from '@/lib/api/services/category.service';
-import type { Category } from '@/lib/api/types';
-import { articles } from '@/lib/mockData'; // Temporary until API is ready
+import { RubrikCard } from '@/components/public/RubrikCard';
+import { categoryService, rubrikService } from '@/lib/api';
+import type { Category, RubrikItem } from '@/lib/api/types';
 
 // Warna mapping untuk setiap category (same as khazanah)
 const categoryColors = {
@@ -30,15 +29,17 @@ const categoryColors = {
   'sejarah-islam': '#C62828',
 };
 
-const ITEMS_PER_PAGE = 9;
-
 export default function RubrikPage() {
-  const [activeFilter, setActiveFilter] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<number | 'all'>('all');
   const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [rubriks, setRubriks] = useState<RubrikItem[]>([]);
+  const [isLoadingRubriks, setIsLoadingRubriks] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -62,51 +63,62 @@ export default function RubrikPage() {
     const timer = setTimeout(() => {
       if (searchInput.trim() === '' || searchInput.trim().length >= 3) {
         setSearchQuery(searchInput.trim());
+        setCurrentPage(1); // Reset to page 1 when search changes
       }
     }, 500);
 
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Filter articles (temporary - will be replaced with API)
-  const filteredArticles = articles.filter((article) => {
-    const matchCategory = activeFilter === 'all' || article.rubrik.slug === activeFilter;
-    const matchSearch =
-      searchQuery === '' ||
-      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchCategory && matchSearch;
-  });
+  // Fetch rubriks when filters change
+  useEffect(() => {
+    const fetchRubriks = async () => {
+      try {
+        setIsLoadingRubriks(true);
+        const response = await rubrikService.getPublishedRubrik({
+          search: searchQuery,
+          category_id: activeFilter === 'all' ? undefined : activeFilter,
+          page: currentPage,
+          per_page: 9,
+        });
 
-  // Pagination
-  const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
-  const paginatedArticles = filteredArticles.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+        setRubriks(response.data.data);
+        setTotalPages(response.data.last_page);
+        setTotalItems(response.data.total);
+      } catch (error) {
+        console.error('Failed to fetch rubriks:', error);
+        setRubriks([]);
+        setTotalPages(1);
+        setTotalItems(0);
+      } finally {
+        setIsLoadingRubriks(false);
+      }
+    };
+
+    fetchRubriks();
+  }, [searchQuery, activeFilter, currentPage]);
 
   // Handlers
-  const handleFilterChange = (filter: string) => {
+  const handleFilterChange = (filter: number | 'all') => {
     setActiveFilter(filter);
     setCurrentPage(1);
   };
 
   const handleSearchChange = (value: string) => {
     setSearchInput(value);
-    setCurrentPage(1);
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(prev => prev + 1);
-      document.getElementById('artikel-grid')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('rubrik-grid')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(prev => prev - 1);
-      document.getElementById('artikel-grid')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('rubrik-grid')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -134,7 +146,7 @@ export default function RubrikPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* FILTER BAR */}
         <div
-          id="artikel-grid"
+          id="rubrik-grid"
           className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 sm:gap-6 mb-8 sm:mb-12 pb-6 sm:pb-8 border-b border-gray-100 scroll-mt-24"
         >
           {/* Category Filters */}
@@ -167,15 +179,15 @@ export default function RubrikPage() {
                 return (
                   <Button
                     key={category.id}
-                    variant={activeFilter === category.slug ? 'default' : 'outline'}
-                    onClick={() => handleFilterChange(category.slug)}
+                    variant={activeFilter === category.id ? 'default' : 'outline'}
+                    onClick={() => handleFilterChange(category.id)}
                     size="sm"
                     className={`rounded-full px-3 sm:px-5 text-xs sm:text-sm border transition-all ${
-                      activeFilter === category.slug
+                      activeFilter === category.id
                         ? 'text-white border-transparent'
                         : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-transparent'
                     }`}
-                    style={activeFilter === category.slug ? { backgroundColor: color } : {}}
+                    style={activeFilter === category.id ? { backgroundColor: color } : {}}
                   >
                     {category.name}
                   </Button>
@@ -201,23 +213,42 @@ export default function RubrikPage() {
           </div>
         </div>
 
-        {/* ARTICLES GRID */}
-        {paginatedArticles.length > 0 ? (
+        {/* RUBRIKS GRID */}
+        {isLoadingRubriks ? (
+          // Loading skeleton
+          <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 9 }).map((_, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div className="aspect-video bg-gray-200 animate-pulse" />
+                <div className="p-4 sm:p-5 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
+                  <div className="h-6 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-full" />
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-2/3" />
+                  <div className="pt-3 border-t border-gray-100 flex justify-between">
+                    <div className="h-3 bg-gray-200 rounded animate-pulse w-24" />
+                    <div className="h-3 bg-gray-200 rounded animate-pulse w-20" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : rubriks.length > 0 ? (
           <>
             <p className="mb-6 sm:mb-8 text-sm sm:text-base text-gray-600">
-              Menampilkan <span className="font-semibold text-gray-900">{filteredArticles.length}</span> artikel
+              Menampilkan <span className="font-semibold text-gray-900">{totalItems}</span> rubrik
               {activeFilter !== 'all' && (
                 <span>
                   {' '}dalam kategori{' '}
                   <span className="font-semibold text-islamGreen">
-                    {categories.find(cat => cat.slug === activeFilter)?.name || activeFilter}
+                    {categories.find(cat => cat.id === activeFilter)?.name || ''}
                   </span>
                 </span>
               )}
             </p>
             <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {paginatedArticles.map((article) => (
-                <ArticleCard key={article.id} article={article} />
+              {rubriks.map((rubrik) => (
+                <RubrikCard key={rubrik.id} rubrik={rubrik} />
               ))}
             </div>
 
@@ -267,11 +298,11 @@ export default function RubrikPage() {
               Tidak ditemukan
             </h3>
             <p className="text-sm sm:text-base text-gray-500 px-4">
-              Maaf, tidak ada artikel untuk kategori{' '}
+              Maaf, tidak ada rubrik untuk kategori{' '}
               <span className="font-bold">
                 &quot;{activeFilter === 'all'
                   ? 'Semua'
-                  : categories.find(cat => cat.slug === activeFilter)?.name || activeFilter}&quot;
+                  : categories.find(cat => cat.id === activeFilter)?.name || ''}&quot;
               </span>
               {searchQuery && (
                 <span> dengan kata kunci &quot;{searchQuery}&quot;</span>

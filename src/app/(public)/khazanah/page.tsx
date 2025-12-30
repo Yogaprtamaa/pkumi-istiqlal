@@ -4,18 +4,25 @@
  * Responsive dan Modern UI
  */
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { BookOpen, BookMarked, HandHeart, Users, Search, ChevronDown } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { categoryService } from '@/lib/api/services/category.service';
-import { khazanahService } from '@/lib/api/services/khazanah.service';
-import type { Category, KhazanahItem } from '@/lib/api/types';
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import {
+  BookOpen,
+  BookMarked,
+  HandHeart,
+  Users,
+  Search,
+  ChevronDown,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { categoryService } from "@/lib/api/services/category.service";
+import { khazanahService } from "@/lib/api/services/khazanah.service";
+import type { Category, KhazanahItem } from "@/lib/api/types";
 
 // Icon mapping untuk setiap type
 const typeIcons = {
@@ -27,22 +34,22 @@ const typeIcons = {
 
 // Warna mapping untuk setiap type
 const typeColors = {
-  tafsir: '#2E7D32',
-  hadits: '#1565C0',
-  fiqih: '#1565C0',
-  doa: '#6A1B9A',
-  kisah: '#EF6C00',
-  opini: '#EF6C00',
-  'pemikiran-ulama': '#6A1B9A',
-  'sejarah-islam': '#C62828',
+  tafsir: "#2E7D32",
+  hadits: "#1565C0",
+  fiqih: "#1565C0",
+  doa: "#6A1B9A",
+  kisah: "#EF6C00",
+  opini: "#EF6C00",
+  "pemikiran-ulama": "#6A1B9A",
+  "sejarah-islam": "#C62828",
 };
 
 const ITEMS_PER_PAGE = 6;
 
 export default function KhazanahPage() {
-  const [activeFilter, setActiveFilter] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchInput, setSearchInput] = useState(''); // For input display
+  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState(""); // For input display
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -60,7 +67,7 @@ export default function KhazanahPage() {
         const data = await categoryService.getCategories();
         setCategories(data);
       } catch (error) {
-        console.error('Failed to fetch categories:', error);
+        console.error("Failed to fetch categories:", error);
       } finally {
         setIsLoadingCategories(false);
       }
@@ -73,7 +80,7 @@ export default function KhazanahPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       // Only set searchQuery if input is empty or has 3+ characters
-      if (searchInput.trim() === '' || searchInput.trim().length >= 3) {
+      if (searchInput.trim() === "" || searchInput.trim().length >= 3) {
         setSearchQuery(searchInput.trim());
       }
     }, 500); // 500ms debounce
@@ -89,8 +96,8 @@ export default function KhazanahPage() {
 
         // Find category ID from slug if filter is not 'all'
         let categoryId: number | undefined;
-        if (activeFilter !== 'all') {
-          const category = categories.find(cat => cat.slug === activeFilter);
+        if (activeFilter !== "all") {
+          const category = categories.find((cat) => cat.slug === activeFilter);
           categoryId = category?.id;
         }
 
@@ -105,7 +112,7 @@ export default function KhazanahPage() {
         setTotalPages(response.data.last_page);
         setTotalItems(response.data.total);
       } catch (error) {
-        console.error('Failed to fetch khazanah:', error);
+        console.error("Failed to fetch khazanah:", error);
         setKhazanahItems([]);
         setTotalPages(1);
         setTotalItems(0);
@@ -122,23 +129,27 @@ export default function KhazanahPage() {
 
   // Toggle expand item
   const toggleExpand = (id: number) => {
-    setExpandedItems(prev =>
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    setExpandedItems((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
   // Handlers
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prev => prev + 1);
-      document.getElementById('khazanah-grid')?.scrollIntoView({ behavior: 'smooth' });
+      setCurrentPage((prev) => prev + 1);
+      document
+        .getElementById("khazanah-grid")
+        ?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(prev => prev - 1);
-      document.getElementById('khazanah-grid')?.scrollIntoView({ behavior: 'smooth' });
+      setCurrentPage((prev) => prev - 1);
+      document
+        .getElementById("khazanah-grid")
+        ?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -168,8 +179,8 @@ export default function KhazanahPage() {
             Khazanah Islam
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-4">
-            Perbendaharaan ilmu Islam yang mencerahkan — tafsir Al-Quran, 
-            hadits pilihan, doa sehari-hari, dan kisah inspiratif.
+            Perbendaharaan ilmu Islam yang mencerahkan — tafsir Al-Quran, hadits
+            pilihan, doa sehari-hari, dan kisah inspiratif.
           </p>
         </div>
       </div>
@@ -183,55 +194,59 @@ export default function KhazanahPage() {
           {/* Kategori Filters */}
           <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
             <Button
-              variant={activeFilter === 'all' ? 'default' : 'secondary'}
-              onClick={() => handleFilterChange('all')}
+              variant={activeFilter === "all" ? "default" : "secondary"}
+              onClick={() => handleFilterChange("all")}
               size="sm"
               className={`rounded-full px-4 sm:px-6 text-xs sm:text-sm transition-all ${
-                activeFilter === 'all'
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                activeFilter === "all"
+                  ? "bg-gray-900 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               Semua
             </Button>
 
-            {isLoadingCategories ? (
-              // Loading skeleton for categories
-              Array.from({ length: 4 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="h-8 sm:h-9 w-20 sm:w-24 bg-gray-200 rounded-full animate-pulse"
-                />
-              ))
-            ) : (
-              categories.map((category) => {
-                // Map category slug to icon (fallback to BookOpen if not found)
-                const iconKey = category.slug as keyof typeof typeIcons;
-                const Icon = typeIcons[iconKey] || BookOpen;
+            {isLoadingCategories
+              ? // Loading skeleton for categories
+                Array.from({ length: 4 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-8 sm:h-9 w-20 sm:w-24 bg-gray-200 rounded-full animate-pulse"
+                  />
+                ))
+              : categories.map((category) => {
+                  // Map category slug to icon (fallback to BookOpen if not found)
+                  const iconKey = category.slug as keyof typeof typeIcons;
+                  const Icon = typeIcons[iconKey] || BookOpen;
 
-                // Map category slug to color (fallback to islamGreen if not found)
-                const colorKey = category.slug as keyof typeof typeColors;
-                const color = typeColors[colorKey] || '#2E7D32';
+                  // Map category slug to color (fallback to islamGreen if not found)
+                  const colorKey = category.slug as keyof typeof typeColors;
+                  const color = typeColors[colorKey] || "#2E7D32";
 
-                return (
-                  <Button
-                    key={category.id}
-                    variant={activeFilter === category.slug ? 'default' : 'outline'}
-                    onClick={() => handleFilterChange(category.slug)}
-                    size="sm"
-                    className={`rounded-full px-3 sm:px-5 text-xs sm:text-sm border transition-all gap-1.5 ${
-                      activeFilter === category.slug
-                        ? 'text-white border-transparent'
-                        : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-transparent'
-                    }`}
-                    style={activeFilter === category.slug ? { backgroundColor: color } : {}}
-                  >
-                    <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                    <span>{category.name}</span>
-                  </Button>
-                );
-              })
-            )}
+                  return (
+                    <Button
+                      key={category.id}
+                      variant={
+                        activeFilter === category.slug ? "default" : "outline"
+                      }
+                      onClick={() => handleFilterChange(category.slug)}
+                      size="sm"
+                      className={`rounded-full px-3 sm:px-5 text-xs sm:text-sm border transition-all gap-1.5 ${
+                        activeFilter === category.slug
+                          ? "text-white border-transparent"
+                          : "border-gray-200 text-gray-600 hover:border-gray-300 bg-transparent"
+                      }`}
+                      style={
+                        activeFilter === category.slug
+                          ? { backgroundColor: color }
+                          : {}
+                      }
+                    >
+                      <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                      <span>{category.name}</span>
+                    </Button>
+                  );
+                })}
           </div>
 
           {/* Search Input */}
@@ -270,7 +285,7 @@ export default function KhazanahPage() {
                 const iconKey = item.category.slug as keyof typeof typeIcons;
                 const Icon = typeIcons[iconKey] || BookOpen;
                 const colorKey = item.category.slug as keyof typeof typeColors;
-                const color = typeColors[colorKey] || '#2E7D32';
+                const color = typeColors[colorKey] || "#2E7D32";
                 const isExpanded = expandedItems.includes(item.id);
 
                 return (
@@ -317,20 +332,26 @@ export default function KhazanahPage() {
                     <CardContent className="p-4 sm:p-5">
                       {/* Excerpt */}
                       <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">
-                        {isExpanded ? item.excerpt : item.excerpt.slice(0, 150) + (item.excerpt.length > 150 ? '...' : '')}
+                        {isExpanded
+                          ? item.excerpt
+                          : item.excerpt.slice(0, 150) +
+                            (item.excerpt.length > 150 ? "..." : "")}
                       </p>
 
                       {/* Tags */}
                       {item.tags && (
                         <div className="flex flex-wrap gap-1.5 mb-3">
-                          {item.tags.split(',').slice(0, 3).map((tag, idx) => (
-                            <span
-                              key={idx}
-                              className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full"
-                            >
-                              {tag.trim()}
-                            </span>
-                          ))}
+                          {item.tags
+                            .split(",")
+                            .slice(0, 3)
+                            .map((tag, idx) => (
+                              <span
+                                key={idx}
+                                className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full"
+                              >
+                                {tag.trim()}
+                              </span>
+                            ))}
                         </div>
                       )}
 
@@ -339,21 +360,31 @@ export default function KhazanahPage() {
                         onClick={() => toggleExpand(item.id)}
                         className="mt-2 flex items-center gap-1 text-xs font-medium text-islamGreen hover:text-islamGreen-dark transition-colors"
                       >
-                        {isExpanded ? 'Tutup' : 'Baca Selengkapnya'}
-                        <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
+                        {isExpanded ? "Tutup" : "Baca Selengkapnya"}
+                        <ChevronDown
+                          className={`h-3.5 w-3.5 transition-transform duration-300 ${
+                            isExpanded ? "rotate-180" : ""
+                          }`}
+                        />
                       </button>
 
                       {/* Author & Date */}
                       <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100 flex items-center justify-between text-[10px] sm:text-xs text-gray-500">
                         <span>
-                          <span className="font-medium text-gray-700">Penulis:</span> {item.student.name}
+                          <span className="font-medium text-gray-700">
+                            Penulis:
+                          </span>{" "}
+                          {item.student?.name || "Anonim"}
                         </span>
                         <span>
-                          {new Date(item.published_at).toLocaleDateString('id-ID', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                          })}
+                          {new Date(item.published_at).toLocaleDateString(
+                            "id-ID",
+                            {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            }
+                          )}
                         </span>
                       </div>
                     </CardContent>
@@ -408,11 +439,14 @@ export default function KhazanahPage() {
               Tidak ditemukan
             </h3>
             <p className="text-sm sm:text-base text-gray-500 px-4">
-              Maaf, tidak ada khazanah untuk kategori{' '}
+              Maaf, tidak ada khazanah untuk kategori{" "}
               <span className="font-bold">
-                &quot;{activeFilter === 'all'
-                  ? 'Semua'
-                  : categories.find(cat => cat.slug === activeFilter)?.name || activeFilter}&quot;
+                &quot;
+                {activeFilter === "all"
+                  ? "Semua"
+                  : categories.find((cat) => cat.slug === activeFilter)?.name ||
+                    activeFilter}
+                &quot;
               </span>
               {searchQuery && (
                 <span> dengan kata kunci &quot;{searchQuery}&quot;</span>
@@ -421,9 +455,9 @@ export default function KhazanahPage() {
             <Button
               variant="link"
               onClick={() => {
-                setActiveFilter('all');
-                setSearchQuery('');
-                setSearchInput('');
+                setActiveFilter("all");
+                setSearchQuery("");
+                setSearchInput("");
               }}
               className="text-islamGreen mt-4 text-sm"
             >
