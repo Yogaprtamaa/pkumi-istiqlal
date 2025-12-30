@@ -282,11 +282,14 @@ export default function KhazanahPage() {
           <>
             <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {khazanahItems.map((item) => {
-                const iconKey = item.category.slug as keyof typeof typeIcons;
+                const iconKey = item.category?.slug as keyof typeof typeIcons;
                 const Icon = typeIcons[iconKey] || BookOpen;
-                const colorKey = item.category.slug as keyof typeof typeColors;
+                const colorKey = item.category?.slug as keyof typeof typeColors;
                 const color = typeColors[colorKey] || "#2E7D32";
                 const isExpanded = expandedItems.includes(item.id);
+                const imageUrl = (item.thumbnail && item.thumbnail.trim() !== '')
+                  ? item.thumbnail
+                  : "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&h=600&fit=crop";
 
                 return (
                   <Card
@@ -294,32 +297,28 @@ export default function KhazanahPage() {
                     className="group overflow-hidden border-0 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
                     {/* Image */}
-                    <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                      {item.thumbnail ? (
-                        <Image
-                          src={item.thumbnail}
-                          alt={item.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Icon className="w-16 h-16 text-gray-400" />
-                        </div>
-                      )}
+                    <div className="relative aspect-video overflow-hidden">
+                      <Image
+                        src={imageUrl}
+                        alt={item.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
                       {/* Badge */}
-                      <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                        <Badge
-                          className="border-0 font-semibold shadow-md backdrop-blur-sm text-xs gap-1"
-                          style={{ backgroundColor: color }}
-                        >
-                          <Icon className="h-3 w-3" />
-                          {item.category.name}
-                        </Badge>
-                      </div>
+                      {item.category && (
+                        <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+                          <Badge
+                            className="border-0 font-semibold shadow-md backdrop-blur-sm text-xs gap-1"
+                            style={{ backgroundColor: color }}
+                          >
+                            <Icon className="h-3 w-3" />
+                            {item.category.name}
+                          </Badge>
+                        </div>
+                      )}
 
                       {/* Title on Image */}
                       <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
@@ -331,12 +330,14 @@ export default function KhazanahPage() {
 
                     <CardContent className="p-4 sm:p-5">
                       {/* Excerpt */}
-                      <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">
-                        {isExpanded
-                          ? item.excerpt
-                          : item.excerpt.slice(0, 150) +
-                            (item.excerpt.length > 150 ? "..." : "")}
-                      </p>
+                      {item.excerpt && (
+                        <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">
+                          {isExpanded
+                            ? item.excerpt
+                            : item.excerpt.slice(0, 150) +
+                              (item.excerpt.length > 150 ? "..." : "")}
+                        </p>
+                      )}
 
                       {/* Tags */}
                       {item.tags && (

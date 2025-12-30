@@ -66,14 +66,16 @@ export default async function RubrikDetailPage({
           </Link>
 
           {/* Category Badge */}
-          <div className="mb-4">
-            <Badge
-              className="bg-islamGreen text-white border-0 text-xs sm:text-sm px-3 py-1"
-            >
-              <BookOpen className="mr-1.5 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              {rubrik.category.name}
-            </Badge>
-          </div>
+          {rubrik.category && (
+            <div className="mb-4">
+              <Badge
+                className="bg-islamGreen text-white border-0 text-xs sm:text-sm px-3 py-1"
+              >
+                <BookOpen className="mr-1.5 h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                {rubrik.category.name}
+              </Badge>
+            </div>
+          )}
 
           {/* Title */}
           <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight mb-4 sm:mb-6 leading-tight">
@@ -87,12 +89,16 @@ export default async function RubrikDetailPage({
 
           {/* Meta Information */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500 pb-6 border-b border-gray-200">
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              <span className="font-medium text-gray-700">{rubrik.student.name}</span>
-              <span className="text-gray-400">({rubrik.student.nim})</span>
-            </div>
-            <span className="hidden sm:block h-1 w-1 rounded-full bg-gray-300" />
+            {rubrik.student && (
+              <>
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span className="font-medium text-gray-700">{rubrik.student.name}</span>
+                  <span className="text-gray-400">({rubrik.student.nim})</span>
+                </div>
+                <span className="hidden sm:block h-1 w-1 rounded-full bg-gray-300" />
+              </>
+            )}
             <div className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
               <span>{formatDate(rubrik.published_at)}</span>

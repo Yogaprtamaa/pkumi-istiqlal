@@ -22,8 +22,10 @@ export function RubrikCard({
   rubrik,
   variant = "default",
 }: RubrikCardProps) {
-  // Default fallback image if thumbnail is null
-  const imageUrl = rubrik.thumbnail || "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=800&h=600&fit=crop";
+  // Default fallback image if thumbnail is null or empty
+  const imageUrl = (rubrik.thumbnail && rubrik.thumbnail.trim() !== '')
+    ? rubrik.thumbnail
+    : "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=800&h=600&fit=crop";
 
   // Variant horizontal untuk sidebar atau list view
   if (variant === "horizontal") {
@@ -44,12 +46,14 @@ export function RubrikCard({
 
             {/* Content */}
             <div className="flex flex-1 flex-col justify-center min-w-0">
-              <Badge
-                variant="secondary"
-                className="mb-1 sm:mb-1.5 w-fit text-[9px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 bg-islamGreen/10 text-islamGreen"
-              >
-                {rubrik.category.name}
-              </Badge>
+              {rubrik.category && (
+                <Badge
+                  variant="secondary"
+                  className="mb-1 sm:mb-1.5 w-fit text-[9px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 bg-islamGreen/10 text-islamGreen"
+                >
+                  {rubrik.category.name}
+                </Badge>
+              )}
               <h3 className="line-clamp-2 text-xs sm:text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-islamGreen">
                 {rubrik.title}
               </h3>
@@ -79,13 +83,15 @@ export function RubrikCard({
           {/* Overlay on hover */}
           <div className="absolute inset-0 bg-islamGreen/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           {/* Badge Category */}
-          <div className="absolute left-3 top-3 sm:left-4 sm:top-4">
-            <Badge
-              className="border-0 font-semibold shadow-md backdrop-blur-sm text-xs sm:text-sm bg-islamGreen text-white"
-            >
-              {rubrik.category.name}
-            </Badge>
-          </div>
+          {rubrik.category && (
+            <div className="absolute left-3 top-3 sm:left-4 sm:top-4">
+              <Badge
+                className="border-0 font-semibold shadow-md backdrop-blur-sm text-xs sm:text-sm bg-islamGreen text-white"
+              >
+                {rubrik.category.name}
+              </Badge>
+            </div>
+          )}
           {/* Arrow Icon on hover */}
           <div className="absolute right-3 top-3 sm:right-4 sm:top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
             <ArrowUpRight className="h-4 w-4 text-white" />
@@ -98,9 +104,11 @@ export function RubrikCard({
             {rubrik.title}
           </h3>
 
-          <p className="mt-2 sm:mt-2.5 flex-1 text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed">
-            {rubrik.excerpt}
-          </p>
+          {rubrik.excerpt && (
+            <p className="mt-2 sm:mt-2.5 flex-1 text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed">
+              {rubrik.excerpt}
+            </p>
+          )}
 
           {/* Tags */}
           {rubrik.tags && (
@@ -118,12 +126,14 @@ export function RubrikCard({
 
           {/* Meta */}
           <div className="mt-3 sm:mt-4 flex items-center justify-between border-t border-gray-100 pt-3 sm:pt-4 text-[10px] sm:text-xs text-gray-500">
-            <div className="flex items-center gap-1">
-              <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              <span className="font-medium text-gray-700 truncate max-w-[120px]">
-                {rubrik.student.name}
-              </span>
-            </div>
+            {rubrik.student && (
+              <div className="flex items-center gap-1">
+                <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span className="font-medium text-gray-700 truncate max-w-[120px]">
+                  {rubrik.student.name}
+                </span>
+              </div>
+            )}
             <div className="flex items-center gap-1">
               <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               <span>{formatDate(rubrik.published_at)}</span>

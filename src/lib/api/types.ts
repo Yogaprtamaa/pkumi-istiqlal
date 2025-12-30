@@ -62,6 +62,25 @@ export interface ProfileResponse {
   };
 }
 
+export interface StudentProfileQueryParams {
+  type?: 'khazanah' | 'rubrik';
+  status?: 'published' | 'draft' | 'archived';
+  search?: string;
+  per_page?: number;
+  page?: number;
+}
+
+export interface StudentProfileWithContentResponse {
+  code: number;
+  status: string;
+  message: string;
+  data: {
+    student: Student;
+    khazanahs?: KhazanahData;
+    rubriks?: RubrikData;
+  };
+}
+
 export interface ChangePasswordRequest {
   current_password: string;
   password: string;
@@ -134,16 +153,16 @@ export interface KhazanahItem {
   category_id: number;
   title: string;
   slug: string;
-  excerpt: string;
-  tags: string;
+  excerpt: string | null;
+  tags: string | null;
   thumbnail: string | null;
   status: string;
   published_at: string;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  student: KhazanahStudent;
-  category: KhazanahCategory;
+  student?: KhazanahStudent;
+  category?: KhazanahCategory;
 }
 
 export interface KhazanahDetail extends KhazanahItem {
@@ -263,16 +282,16 @@ export interface RubrikItem {
   category_id: number;
   title: string;
   slug: string;
-  excerpt: string;
-  tags: string;
+  excerpt: string | null;
+  tags: string | null;
   thumbnail: string | null;
   status: string;
   published_at: string;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  student: RubrikStudent;
-  category: RubrikCategory;
+  student?: RubrikStudent;
+  category?: RubrikCategory;
 }
 
 export interface RubrikDetail extends RubrikItem {

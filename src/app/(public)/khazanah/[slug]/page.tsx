@@ -66,14 +66,16 @@ export default async function KhazanahDetailPage({
           </Link>
 
           {/* Category Badge */}
-          <div className="mb-4">
-            <Badge
-              className="bg-islamGreen text-white border-0 text-xs sm:text-sm px-3 py-1"
-            >
-              <BookOpen className="mr-1.5 h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              {khazanah.category.name}
-            </Badge>
-          </div>
+          {khazanah.category && (
+            <div className="mb-4">
+              <Badge
+                className="bg-islamGreen text-white border-0 text-xs sm:text-sm px-3 py-1"
+              >
+                <BookOpen className="mr-1.5 h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                {khazanah.category.name}
+              </Badge>
+            </div>
+          )}
 
           {/* Title */}
           <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight mb-4 sm:mb-6 leading-tight">
