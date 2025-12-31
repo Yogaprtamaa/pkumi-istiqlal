@@ -93,12 +93,12 @@ export default async function KhazanahDetailPage({
               <Calendar className="h-4 w-4" />
               <span>{formatDate(khazanah.published_at)}</span>
             </div>
-            {khazanah.views !== undefined && (
+            {(khazanah.views || khazanah.views_count) && (
               <>
                 <span className="hidden sm:block h-1 w-1 rounded-full bg-gray-300" />
                 <div className="flex items-center gap-1.5">
                   <Eye className="h-4 w-4" />
-                  <span>{khazanah.views} views</span>
+                  <span>{khazanah.views || khazanah.views_count} views</span>
                 </div>
               </>
             )}

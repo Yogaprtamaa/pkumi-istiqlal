@@ -7,7 +7,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, User, ArrowUpRight } from "lucide-react";
+import { Clock, User, ArrowUpRight, Eye } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
@@ -126,19 +126,27 @@ export function RubrikCard({
           )}
 
           {/* Meta */}
-          <div className="mt-3 sm:mt-4 flex items-center justify-between border-t border-gray-100 pt-3 sm:pt-4 text-[10px] sm:text-xs text-gray-500">
-            {rubrik.student && (
+          <div className="mt-3 sm:mt-4 border-t border-gray-100 pt-3 sm:pt-4">
+            <div className="flex items-center justify-between text-[10px] sm:text-xs text-gray-500">
+              {(rubrik.author?.name || rubrik.student?.name) && (
+                <div className="flex items-center gap-1">
+                  <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                  <span className="font-medium text-gray-700 truncate max-w-[120px]">
+                    {rubrik.author?.name || rubrik.student?.name}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center gap-1">
-                <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                <span className="font-medium text-gray-700 truncate max-w-[120px]">
-                  {rubrik.student.name}
-                </span>
+                <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span>{formatDate(rubrik.published_at)}</span>
+              </div>
+            </div>
+            {(rubrik.views || rubrik.views_count) && (
+              <div className="flex items-center gap-1 mt-2 text-[10px] sm:text-xs text-gray-500">
+                <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span>{rubrik.views || rubrik.views_count} views</span>
               </div>
             )}
-            <div className="flex items-center gap-1">
-              <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              <span>{formatDate(rubrik.published_at)}</span>
-            </div>
           </div>
         </div>
       </Card>

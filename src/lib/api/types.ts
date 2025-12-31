@@ -158,9 +158,11 @@ export interface KhazanahItem {
   thumbnail: string | null;
   status: string;
   published_at: string;
+  views_count?: number;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  views?: number;
   student?: KhazanahStudent;
   author?: KhazanahStudent; // Untuk kompatibilitas dengan berbagai endpoint
   category?: KhazanahCategory;
@@ -278,8 +280,9 @@ export interface TrixRichText {
 
 export interface RubrikItem {
   id: number;
-  student_id: number;
   category_id: number;
+  author_id: number;
+  author_type: string; // "App\\Models\\Student" atau "App\\Models\\User"
   title: string;
   slug: string;
   excerpt: string | null;
@@ -287,10 +290,13 @@ export interface RubrikItem {
   thumbnail: string | null;
   status: string;
   published_at: string;
+  views_count?: number;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  student?: RubrikStudent;
+  views?: number;
+  student?: RubrikStudent; // Deprecated, gunakan author
+  author?: RubrikStudent; // Author bisa Student atau User
   category?: RubrikCategory;
 }
 

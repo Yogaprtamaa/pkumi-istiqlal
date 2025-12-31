@@ -7,7 +7,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, Calendar, User, Tag, BookOpen } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Tag, BookOpen, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { rubrikService } from '@/lib/api';
@@ -89,12 +89,18 @@ export default async function RubrikDetailPage({
 
           {/* Meta Information */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500 pb-6 border-b border-gray-200">
-            {rubrik.student && (
+            {(rubrik.author || rubrik.student) && (
               <>
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  <span className="font-medium text-gray-700">{rubrik.student.name}</span>
-                  <span className="text-gray-400">({rubrik.student.nim})</span>
+                  <span className="font-medium text-gray-700">
+                    {rubrik.author?.name || rubrik.student?.name}
+                  </span>
+                  {(rubrik.author?.nim || rubrik.student?.nim) && (
+                    <span className="text-gray-400">
+                      ({rubrik.author?.nim || rubrik.student?.nim})
+                    </span>
+                  )}
                 </div>
                 <span className="hidden sm:block h-1 w-1 rounded-full bg-gray-300" />
               </>
@@ -103,6 +109,15 @@ export default async function RubrikDetailPage({
               <Calendar className="h-4 w-4" />
               <span>{formatDate(rubrik.published_at)}</span>
             </div>
+            {(rubrik.views || rubrik.views_count) && (
+              <>
+                <span className="hidden sm:block h-1 w-1 rounded-full bg-gray-300" />
+                <div className="flex items-center gap-1.5">
+                  <Eye className="h-4 w-4" />
+                  <span>{rubrik.views || rubrik.views_count} views</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

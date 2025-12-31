@@ -15,6 +15,7 @@ import {
   HandHeart,
   Users,
   Search,
+  Eye,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -345,23 +346,31 @@ export default function KhazanahPage() {
                       )}
 
                       {/* Author & Date */}
-                      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100 flex items-center justify-between text-[10px] sm:text-xs text-gray-500">
-                        <span>
-                          <span className="font-medium text-gray-700">
-                            Penulis:
-                          </span>{" "}
-                          {item.author?.name || item.student?.name || "Anonim"}
-                        </span>
-                        <span>
-                          {new Date(item.published_at).toLocaleDateString(
-                            "id-ID",
-                            {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )}
-                        </span>
+                      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                        <div className="flex items-center justify-between text-[10px] sm:text-xs text-gray-500">
+                          <span>
+                            <span className="font-medium text-gray-700">
+                              Penulis:
+                            </span>{" "}
+                            {item.author?.name || item.student?.name || "Anonim"}
+                          </span>
+                          <span>
+                            {new Date(item.published_at).toLocaleDateString(
+                              "id-ID",
+                              {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )}
+                          </span>
+                        </div>
+                        {(item.views || item.views_count) && (
+                          <div className="flex items-center gap-1 mt-2 text-[10px] sm:text-xs text-gray-500">
+                            <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                            <span>{item.views || item.views_count} views</span>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>

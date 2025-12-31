@@ -7,7 +7,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Clock } from "lucide-react";
+import { Clock, Eye } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
@@ -75,14 +75,22 @@ export function KhazanahCard({ khazanah }: KhazanahCardProps) {
           )}
 
           {/* Meta Info */}
-          <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-100 pt-3">
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{formatDate(khazanah.published_at)}</span>
+          <div className="border-t border-gray-100 pt-3">
+            <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                <span>{formatDate(khazanah.published_at)}</span>
+              </div>
+              {(khazanah.author?.name || khazanah.student?.name) && (
+                <div className="flex items-center gap-1.5 font-medium text-gray-700">
+                  <span className="text-xs">{khazanah.author?.name || khazanah.student?.name}</span>
+                </div>
+              )}
             </div>
-            {(khazanah.author?.name || khazanah.student?.name) && (
-              <div className="flex items-center gap-1.5 font-medium text-gray-700">
-                <span className="text-xs">{khazanah.author?.name || khazanah.student?.name}</span>
+            {(khazanah.views || khazanah.views_count) && (
+              <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
+                <Eye className="h-3.5 w-3.5" />
+                <span>{khazanah.views || khazanah.views_count} views</span>
               </div>
             )}
           </div>
