@@ -33,6 +33,7 @@ export function KhazanahCard({ khazanah }: KhazanahCardProps) {
             alt={khazanah.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
+            unoptimized
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
@@ -79,9 +80,9 @@ export function KhazanahCard({ khazanah }: KhazanahCardProps) {
               <Clock className="h-3.5 w-3.5" />
               <span>{formatDate(khazanah.published_at)}</span>
             </div>
-            {khazanah.student?.name && (
+            {(khazanah.author?.name || khazanah.student?.name) && (
               <div className="flex items-center gap-1.5 font-medium text-gray-700">
-                <span className="text-xs">{khazanah.student.name}</span>
+                <span className="text-xs">{khazanah.author?.name || khazanah.student?.name}</span>
               </div>
             )}
           </div>

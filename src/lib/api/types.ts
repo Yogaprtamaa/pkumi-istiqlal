@@ -162,12 +162,12 @@ export interface KhazanahItem {
   updated_at: string;
   deleted_at: string | null;
   student?: KhazanahStudent;
+  author?: KhazanahStudent; // Untuk kompatibilitas dengan berbagai endpoint
   category?: KhazanahCategory;
 }
 
 export interface KhazanahDetail extends KhazanahItem {
   views?: number;
-  author?: string | null;
   trix_rich_texts?: TrixRichText[];
   tags_array?: string[];
   content?: string; // Processed content from trix_rich_texts

@@ -106,7 +106,7 @@ export default async function KhazanahDetailPage({
               <>
                 <span className="hidden sm:block h-1 w-1 rounded-full bg-gray-300" />
                 <span className="font-medium text-gray-700">
-                  Oleh: {khazanah.author}
+                  Oleh: {khazanah.author.name}
                 </span>
               </>
             )}

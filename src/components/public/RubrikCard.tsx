@@ -40,6 +40,7 @@ export function RubrikCard({
                 alt={rubrik.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
+                unoptimized
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
             </div>

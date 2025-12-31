@@ -8,13 +8,13 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   BookOpen,
   BookMarked,
   HandHeart,
   Users,
   Search,
-  ChevronDown,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +51,6 @@ export default function KhazanahPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchInput, setSearchInput] = useState(""); // For input display
   const [currentPage, setCurrentPage] = useState(1);
-  const [expandedItems, setExpandedItems] = useState<number[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [khazanahItems, setKhazanahItems] = useState<KhazanahItem[]>([]);
@@ -126,13 +125,6 @@ export default function KhazanahPage() {
       fetchKhazanah();
     }
   }, [activeFilter, searchQuery, currentPage, categories, isLoadingCategories]);
-
-  // Toggle expand item
-  const toggleExpand = (id: number) => {
-    setExpandedItems((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
 
   // Handlers
   const handleNextPage = () => {
@@ -286,15 +278,13 @@ export default function KhazanahPage() {
                 const Icon = typeIcons[iconKey] || BookOpen;
                 const colorKey = item.category?.slug as keyof typeof typeColors;
                 const color = typeColors[colorKey] || "#2E7D32";
-                const isExpanded = expandedItems.includes(item.id);
                 const imageUrl = (item.thumbnail && item.thumbnail.trim() !== '')
                   ? item.thumbnail
                   : "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&h=600&fit=crop";
 
                 return (
-                  <Card
-                    key={item.id}
-                    className="group overflow-hidden border-0 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                  <Link key={item.id} href={`/khazanah/${item.slug}`} className="group block">
+                    <Card className="h-full overflow-hidden border-0 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
                     {/* Image */}
                     <div className="relative aspect-video overflow-hidden">
@@ -303,6 +293,7 @@ export default function KhazanahPage() {
                         alt={item.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        unoptimized
                       />
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
@@ -331,11 +322,8 @@ export default function KhazanahPage() {
                     <CardContent className="p-4 sm:p-5">
                       {/* Excerpt */}
                       {item.excerpt && (
-                        <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed">
-                          {isExpanded
-                            ? item.excerpt
-                            : item.excerpt.slice(0, 150) +
-                              (item.excerpt.length > 150 ? "..." : "")}
+                        <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed line-clamp-3">
+                          {item.excerpt}
                         </p>
                       )}
 
@@ -356,26 +344,13 @@ export default function KhazanahPage() {
                         </div>
                       )}
 
-                      {/* Expand Button */}
-                      <button
-                        onClick={() => toggleExpand(item.id)}
-                        className="mt-2 flex items-center gap-1 text-xs font-medium text-islamGreen hover:text-islamGreen-dark transition-colors"
-                      >
-                        {isExpanded ? "Tutup" : "Baca Selengkapnya"}
-                        <ChevronDown
-                          className={`h-3.5 w-3.5 transition-transform duration-300 ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
-                        />
-                      </button>
-
                       {/* Author & Date */}
                       <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100 flex items-center justify-between text-[10px] sm:text-xs text-gray-500">
                         <span>
                           <span className="font-medium text-gray-700">
                             Penulis:
                           </span>{" "}
-                          {item.student?.name || "Anonim"}
+                          {item.author?.name || item.student?.name || "Anonim"}
                         </span>
                         <span>
                           {new Date(item.published_at).toLocaleDateString(
@@ -390,6 +365,7 @@ export default function KhazanahPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  </Link>
                 );
               })}
             </div>
