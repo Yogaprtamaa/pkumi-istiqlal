@@ -116,11 +116,31 @@ class KhazanahService {
 
   /**
    * Delete khazanah
-   * @param id - Khazanah ID
+   * @param slug - Khazanah slug
    */
-  async deleteKhazanah(id: number): Promise<void> {
-    const url = `${API_ENDPOINTS.khazanah.delete}/${id}`;
+  async deleteKhazanah(slug: string): Promise<void> {
+    const url = `${API_ENDPOINTS.khazanah.delete}/${slug}`;
     await apiClient.delete(url, true);
+  }
+
+  /**
+   * Unpublish khazanah (change status from published to draft)
+   * @param slugOrId - Khazanah slug or ID
+   */
+  async unpublishKhazanah(slugOrId: string | number): Promise<KhazanahDetail> {
+    const url = `${API_ENDPOINTS.khazanah.unpublish}/${slugOrId}/unpublish`;
+    const response = await apiClient.post<KhazanahDetailResponse>(url, {}, true);
+    return response.data;
+  }
+
+  /**
+   * Archive khazanah
+   * @param slugOrId - Khazanah slug or ID
+   */
+  async archiveKhazanah(slugOrId: string | number): Promise<KhazanahDetail> {
+    const url = `${API_ENDPOINTS.khazanah.archive}/${slugOrId}/archive`;
+    const response = await apiClient.post<KhazanahDetailResponse>(url, {}, true);
+    return response.data;
   }
 }
 

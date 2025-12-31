@@ -118,11 +118,31 @@ class RubrikService {
 
   /**
    * Delete rubrik
-   * @param id - Rubrik ID
+   * @param slug - Rubrik slug
    */
-  async deleteRubrik(id: number): Promise<void> {
-    const url = `${API_ENDPOINTS.rubrik.delete}/${id}`;
+  async deleteRubrik(slug: string): Promise<void> {
+    const url = `${API_ENDPOINTS.rubrik.delete}/${slug}`;
     await apiClient.delete(url, true);
+  }
+
+  /**
+   * Unpublish rubrik (change status from published to draft)
+   * @param slugOrId - Rubrik slug or ID
+   */
+  async unpublishRubrik(slugOrId: string | number): Promise<RubrikDetail> {
+    const url = `${API_ENDPOINTS.rubrik.unpublish}/${slugOrId}/unpublish`;
+    const response = await apiClient.post<RubrikDetailResponse>(url, {}, true);
+    return response.data;
+  }
+
+  /**
+   * Archive rubrik
+   * @param slugOrId - Rubrik slug or ID
+   */
+  async archiveRubrik(slugOrId: string | number): Promise<RubrikDetail> {
+    const url = `${API_ENDPOINTS.rubrik.archive}/${slugOrId}/archive`;
+    const response = await apiClient.post<RubrikDetailResponse>(url, {}, true);
+    return response.data;
   }
 }
 

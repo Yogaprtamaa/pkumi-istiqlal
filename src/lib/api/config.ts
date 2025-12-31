@@ -29,6 +29,8 @@ export const API_ENDPOINTS = {
     create: '/api/khazanah',
     update: '/api/khazanah',
     delete: '/api/khazanah',
+    unpublish: '/api/khazanah',
+    archive: '/api/khazanah',
   },
   artikel: {
     published: '/api/artikel/published',
@@ -41,6 +43,8 @@ export const API_ENDPOINTS = {
     create: '/api/rubrik',
     update: '/api/rubrik',
     delete: '/api/rubrik',
+    unpublish: '/api/rubrik',
+    archive: '/api/rubrik',
   },
   // Tambahkan endpoints lainnya di sini
 } as const;

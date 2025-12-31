@@ -12,15 +12,18 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import type { RubrikItem } from "@/lib/api/types";
+import { ContentActionButtons } from "@/components/public/ContentActionButtons";
 
 interface RubrikCardProps {
   rubrik: RubrikItem;
   variant?: "default" | "horizontal";
+  isOwnProfile?: boolean;
 }
 
 export function RubrikCard({
   rubrik,
   variant = "default",
+  isOwnProfile = false,
 }: RubrikCardProps) {
   // Default fallback image if thumbnail is null or empty
   const imageUrl = (rubrik.thumbnail && rubrik.thumbnail.trim() !== '')
@@ -62,6 +65,14 @@ export function RubrikCard({
                 <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                 {formatDate(rubrik.published_at)}
               </p>
+
+              {/* Action Buttons for own content */}
+              <ContentActionButtons
+                type="rubrik"
+                slug={rubrik.slug}
+                status={(rubrik.status as 'draft' | 'published' | 'archived') || 'published'}
+                isOwnContent={isOwnProfile}
+              />
             </div>
           </div>
         </Card>
@@ -147,6 +158,14 @@ export function RubrikCard({
                 <span>{rubrik.views || rubrik.views_count} views</span>
               </div>
             )}
+
+            {/* Action Buttons for own content */}
+            <ContentActionButtons
+              type="rubrik"
+              slug={rubrik.slug}
+              status={(rubrik.status as 'draft' | 'published' | 'archived') || 'published'}
+              isOwnContent={isOwnProfile}
+            />
           </div>
         </div>
       </Card>

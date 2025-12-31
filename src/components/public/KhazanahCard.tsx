@@ -12,12 +12,14 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import type { KhazanahItem } from "@/lib/api/types";
+import { ContentActionButtons } from "@/components/public/ContentActionButtons";
 
 interface KhazanahCardProps {
   khazanah: KhazanahItem;
+  isOwnProfile?: boolean;
 }
 
-export function KhazanahCard({ khazanah }: KhazanahCardProps) {
+export function KhazanahCard({ khazanah, isOwnProfile = false }: KhazanahCardProps) {
   // Default fallback image if thumbnail is null or empty
   const imageUrl = (khazanah.thumbnail && khazanah.thumbnail.trim() !== '')
     ? khazanah.thumbnail
@@ -93,6 +95,14 @@ export function KhazanahCard({ khazanah }: KhazanahCardProps) {
                 <span>{khazanah.views || khazanah.views_count} views</span>
               </div>
             )}
+
+            {/* Action Buttons for own content */}
+            <ContentActionButtons
+              type="khazanah"
+              slug={khazanah.slug}
+              status={(khazanah.status as 'draft' | 'published' | 'archived') || 'published'}
+              isOwnContent={isOwnProfile}
+            />
           </div>
         </div>
       </Card>

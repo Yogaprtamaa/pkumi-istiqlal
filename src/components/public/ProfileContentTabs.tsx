@@ -229,7 +229,7 @@ export function ProfileContentTabs({
             <>
               <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {khazanahData.map((khazanah) => (
-                  <KhazanahCard key={khazanah.id} khazanah={khazanah} />
+                  <KhazanahCard key={khazanah.id} khazanah={khazanah} isOwnProfile={isOwnProfile} />
                 ))}
               </div>
 
@@ -285,7 +285,7 @@ export function ProfileContentTabs({
             <>
               <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {rubrikData.map((rubrik) => (
-                  <RubrikCard key={rubrik.id} rubrik={rubrik} />
+                  <RubrikCard key={rubrik.id} rubrik={rubrik} isOwnProfile={isOwnProfile} />
                 ))}
               </div>
 
