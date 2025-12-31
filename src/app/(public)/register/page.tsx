@@ -105,7 +105,11 @@ export default function RegisterPage() {
           {/* Header */}
           <div className="bg-islamGreen px-6 py-8 text-center text-white">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
-              <span className="text-3xl">☪</span>
+              <img
+                src="/logo_pku-mi.png"
+                alt="PKU-MI Logo"
+                className="h-16 w-16 object-contain"
+              />
             </div>
             <h1 className="font-heading text-2xl font-bold">
               Bergabung Bersama Kami

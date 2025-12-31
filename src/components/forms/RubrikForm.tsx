@@ -222,6 +222,16 @@ export function RubrikForm({ initialData, mode = 'create' }: RubrikFormProps) {
             />
           </div>
 
+          {/* Content Editor */}
+          <div className="space-y-2">
+            <Label>Konten *</Label>
+            <TrixEditor
+              value={formData.content}
+              onChange={(value) => setFormData({ ...formData, content: value })}
+              placeholder="Tulis konten rubrik Anda di sini..."
+            />
+          </div>
+
           {/* Thumbnail Upload */}
           <div className="space-y-2">
             <Label>Thumbnail</Label>
@@ -258,27 +268,6 @@ export function RubrikForm({ initialData, mode = 'create' }: RubrikFormProps) {
                 />
               </label>
             )}
-          </div>
-
-          {/* Tags */}
-          <div className="space-y-2">
-            <Label htmlFor="tags">Tags</Label>
-            <Input
-              id="tags"
-              value={formData.tags}
-              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-              placeholder="islam, dakwah, mahasiswa (pisahkan dengan koma)"
-            />
-          </div>
-
-          {/* Content Editor */}
-          <div className="space-y-2">
-            <Label>Konten *</Label>
-            <TrixEditor
-              value={formData.content}
-              onChange={(value) => setFormData({ ...formData, content: value })}
-              placeholder="Tulis konten rubrik Anda di sini..."
-            />
           </div>
 
           {/* Published At */}

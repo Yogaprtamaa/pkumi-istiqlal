@@ -124,9 +124,11 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2.5 text-xl font-heading font-bold text-islamGreen transition-all duration-300 hover:text-islamGreen-dark hover:scale-105"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-islamGreen text-white shadow-md shadow-islamGreen/20">
-                <span className="text-lg">☪</span>
-              </div>
+              <img
+                src="/logo_pku-mi.png"
+                alt="PKU-MI Logo"
+                className="h-16 w-16 object-contain"
+              />
               <span className="hidden sm:inline">{SITE_CONFIG.name}</span>
             </Link>
 
@@ -357,9 +359,11 @@ export function Navbar() {
               className="flex items-center gap-2.5 text-lg font-heading font-bold text-islamGreen"
               onClick={() => setIsMenuOpen(false)}
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-islamGreen text-white shadow-md shadow-islamGreen/20">
-                <span className="text-base">☪</span>
-              </div>
+              <img
+                src="/logo_pku-mi.png"
+                alt="PKU-MI Logo"
+                className="h-16 w-16 object-contain"
+              />
               <span className="truncate">{SITE_CONFIG.name}</span>
             </Link>
             <Button

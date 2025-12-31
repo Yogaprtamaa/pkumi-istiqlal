@@ -38,7 +38,11 @@ export function Footer() {
               href="/" 
               className="flex items-center gap-2 text-lg sm:text-xl font-heading font-bold text-islamGreen"
             >
-              <span className="text-xl sm:text-2xl">☪</span>
+              <img
+                src="/logo_pku-mi.png"
+                alt="PKU-MI Logo"
+                className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+              />
               <span>{SITE_CONFIG.name}</span>
             </Link>
             <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600">
