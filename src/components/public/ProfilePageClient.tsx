@@ -9,8 +9,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProfileContent, type Author } from "./ProfileContent";
-import { articles } from "@/lib/mockData";
-import type { Article } from "@/types";
 import { Loader2 } from "lucide-react";
 
 interface ProfilePageClientProps {
@@ -20,7 +18,6 @@ interface ProfilePageClientProps {
 export function ProfilePageClient({ slug }: ProfilePageClientProps) {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [author, setAuthor] = useState<Author | null>(null);
-  const [authorArticles, setAuthorArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,13 +60,6 @@ export function ProfilePageClient({ slug }: ProfilePageClientProps) {
         };
 
         setAuthor(authorData);
-
-        // Get articles by this author (from mock for now)
-        // TODO: Fetch articles dari API berdasarkan author NIM
-        const userArticles = articles.filter(
-          (article) => article.author === user.name
-        );
-        setAuthorArticles(userArticles);
         setError(null);
       } else if (!isAuthenticated) {
         // User tidak login, tidak bisa akses profile page
@@ -150,5 +140,5 @@ export function ProfilePageClient({ slug }: ProfilePageClientProps) {
     );
   }
 
-  return <ProfileContent author={author} authorArticles={authorArticles} />;
+  return <ProfileContent author={author} />;
 }

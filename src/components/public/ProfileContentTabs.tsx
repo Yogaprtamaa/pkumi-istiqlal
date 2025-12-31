@@ -5,20 +5,16 @@
 
 "use client";
 
-import { useState } from "react";
-import { Search, Filter, BookOpen, PenLine, FileText } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Filter, BookOpen, PenLine } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArticleCard } from "@/components/public/ArticleCard";
 import { KhazanahCard } from "@/components/public/KhazanahCard";
 import { RubrikCard } from "@/components/public/RubrikCard";
-import type { Article } from "@/types";
 import type { KhazanahItem, RubrikItem } from "@/lib/api/types";
 
 interface ProfileContentTabsProps {
-  authorArticles: Article[];
   authorId: string;
   isOwnProfile?: boolean;
 }
@@ -26,11 +22,10 @@ interface ProfileContentTabsProps {
 type ContentStatus = "all" | "published" | "draft" | "archived";
 
 export function ProfileContentTabs({
-  authorArticles,
   authorId,
   isOwnProfile = false,
 }: ProfileContentTabsProps) {
-  const [activeTab, setActiveTab] = useState("artikel");
+  const [activeTab, setActiveTab] = useState("khazanah");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ContentStatus>("all");
   const [khazanahData, setKhazanahData] = useState<KhazanahItem[]>([]);
@@ -38,6 +33,12 @@ export function ProfileContentTabs({
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // Fetch khazanah data on initial mount (since it's the default tab)
+  useEffect(() => {
+    fetchKhazanah();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Fetch data when tab changes
   const handleTabChange = async (value: string) => {
@@ -142,12 +143,8 @@ export function ProfileContentTabs({
 
   return (
     <div className="mt-8">
-      <Tabs defaultValue="artikel" value={activeTab} onValueChange={handleTabChange}>
+      <Tabs defaultValue="khazanah" value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="w-full sm:w-auto mb-6">
-          <TabsTrigger value="artikel" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span>Artikel</span>
-          </TabsTrigger>
           <TabsTrigger value="khazanah" className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
             <span>Khazanah</span>
@@ -220,22 +217,6 @@ export function ProfileContentTabs({
             )}
           </div>
         )}
-
-        {/* Artikel Tab */}
-        <TabsContent value="artikel">
-          {authorArticles.length > 0 ? (
-            <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {authorArticles.map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 text-gray-500">
-              <FileText className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-              <p>Belum ada artikel yang dipublikasikan</p>
-            </div>
-          )}
-        </TabsContent>
 
         {/* Khazanah Tab */}
         <TabsContent value="khazanah">

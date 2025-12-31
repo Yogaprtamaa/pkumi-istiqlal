@@ -33,7 +33,6 @@ import { Badge } from "@/components/ui/badge";
 import { ProfileContentTabs } from "@/components/public/ProfileContentTabs";
 import { ChangePasswordDialog } from "@/components/public/ChangePasswordDialog";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Article } from "@/types";
 
 // Type untuk data penulis
 export interface Author {
@@ -167,12 +166,10 @@ function StatCard({
 
 interface ProfileContentProps {
   author: Author;
-  authorArticles: Article[];
 }
 
 export function ProfileContent({
   author,
-  authorArticles,
 }: ProfileContentProps) {
   const setRef = useScrollReveal();
   const [isHovered, setIsHovered] = useState(false);
@@ -717,13 +714,12 @@ export function ProfileContent({
           </div>
         )}
 
-        {/* Content Tabs Section - Artikel, Khazanah, Rubrik */}
+        {/* Content Tabs Section - Khazanah & Rubrik */}
         <div
           ref={setRef(2)}
           className="pb-16 sm:pb-20 lg:pb-24 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-200"
         >
           <ProfileContentTabs
-            authorArticles={authorArticles}
             authorId={author.id}
             isOwnProfile={isOwnProfile}
           />
