@@ -9,14 +9,65 @@ import { ArrowRight, PenSquare, BookOpen, TrendingUp, Star, Flame } from 'lucide
 import { Button } from '@/components/ui/button';
 import { QuoteOfTheDay } from '@/components/public/QuoteOfTheDay';
 import { KhazanahCarousel } from '@/components/public/KhazanahCarousel';
-import { getLatestArticles, getPopularArticles, khazanah } from '@/lib/mockData';
+import { khazanahService } from '@/lib/api/services/khazanah.service';
+import { rubrikService } from '@/lib/api/services/rubrik.service';
+import type { KhazanahItem, RubrikItem } from '@/lib/api/types';
 
-export default function HomePage() {
-  // Data preparation
-  const latestRubrik = getLatestArticles(1)[0]; // Featured rubrik untuk hero
-  const trendingRubrik = getLatestArticles(6).slice(0, 6); // Simulasi trending (nanti pakai API)
-  const popularRubrik = getPopularArticles(6); // Popular rubrik
-  const popularKhazanah = khazanah; // Nanti pakai data popular dari API
+export default async function HomePage() {
+  // Fetch data dari API
+  let featuredRubrik: RubrikItem | null = null;
+  let trendingRubrik: RubrikItem[] = [];
+  let popularRubrik: RubrikItem[] = [];
+  let popularKhazanah: KhazanahItem[] = [];
+
+  try {
+    console.log('Homepage: Starting data fetch...');
+
+    // Fetch semua data secara parallel
+    // TEMPORARY: Gunakan published endpoints jika popular/trending belum tersedia di backend
+    const [
+      trendingRubrikData,
+      popularRubrikData,
+      popularKhazanahData,
+    ] = await Promise.all([
+      rubrikService.getTrendingRubrik({ per_page: 6 }).catch(err => {
+        console.error('Error fetching trending rubrik:', err);
+        console.error('Falling back to published rubrik');
+        return rubrikService.getPublishedRubrikItems({ per_page: 6 }).catch(() => []);
+      }),
+      rubrikService.getPopularRubrik({ per_page: 6 }).catch(err => {
+        console.error('Error fetching popular rubrik:', err);
+        console.error('Falling back to published rubrik');
+        return rubrikService.getPublishedRubrikItems({ per_page: 6 }).catch(() => []);
+      }),
+      khazanahService.getPopularKhazanah({ per_page: 6 }).catch(err => {
+        console.error('Error fetching popular khazanah:', err);
+        console.error('Falling back to published khazanah');
+        return khazanahService.getPublishedKhazanahItems({ per_page: 6 }).catch(() => []);
+      }),
+    ]);
+
+    trendingRubrik = trendingRubrikData || [];
+    popularRubrik = popularRubrikData || [];
+    popularKhazanah = popularKhazanahData || [];
+
+    console.log('Homepage data fetched:', {
+      trendingCount: trendingRubrik.length,
+      popularRubrikCount: popularRubrik.length,
+      popularKhazanahCount: popularKhazanah.length,
+    });
+  } catch (error) {
+    console.error('Error fetching homepage data:', error);
+    // Set default empty arrays jika error
+    trendingRubrik = [];
+    popularRubrik = [];
+    popularKhazanah = [];
+  }
+
+  // Featured rubrik adalah item pertama dari trending
+  if (trendingRubrik.length > 0) {
+    featuredRubrik = trendingRubrik[0];
+  }
 
   return (
     <main className="bg-white selection:bg-islamGreen/20 selection:text-islamGreen-dark">
@@ -31,15 +82,21 @@ export default function HomePage() {
           </div>
 
           {/* Featured Rubrik */}
-          {latestRubrik && (
+          {featuredRubrik && (
             <div className="group relative overflow-hidden rounded-3xl bg-gray-900 shadow-2xl">
               <div className="absolute inset-0">
-                <Image
-                  src={latestRubrik.imageUrl || '/placeholder.jpg'}
-                  alt={latestRubrik.title}
-                  fill
-                  className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
-                />
+                {featuredRubrik.thumbnail ? (
+                  <Image
+                    src={featuredRubrik.thumbnail}
+                    alt={featuredRubrik.title}
+                    fill
+                    className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-islamGreen via-islamGreen-dark to-emerald-800 flex items-center justify-center">
+                    <BookOpen className="w-32 h-32 text-white/20" />
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
               </div>
 
@@ -50,26 +107,26 @@ export default function HomePage() {
 
                 <h1 className="mb-4 font-heading text-4xl lg:text-6xl font-extrabold text-white leading-tight">
                   <Link
-                    href={`/rubrik/${latestRubrik.slug}`}
+                    href={`/rubrik/${featuredRubrik.slug}`}
                     className="hover:text-islamGreen-pastel transition-colors"
                   >
-                    {latestRubrik.title}
+                    {featuredRubrik.title}
                   </Link>
                 </h1>
 
                 <p className="mb-8 max-w-3xl text-lg text-gray-300 leading-relaxed">
-                  {latestRubrik.excerpt}
+                  {featuredRubrik.excerpt}
                 </p>
 
                 <div className="flex flex-wrap items-center gap-6 text-white/90">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-islamGreen flex items-center justify-center text-sm font-bold">
-                      {latestRubrik.author?.charAt(0).toUpperCase()}
+                      {featuredRubrik.author?.name?.charAt(0).toUpperCase() || 'A'}
                     </div>
                     <div>
-                      <p className="font-medium">{latestRubrik.author}</p>
+                      <p className="font-medium">{featuredRubrik.author?.name || 'Anonymous'}</p>
                       <p className="text-sm text-gray-400">
-                        {new Date(latestRubrik.date).toLocaleDateString('id-ID', {
+                        {new Date(featuredRubrik.published_at).toLocaleDateString('id-ID', {
                           day: 'numeric',
                           month: 'long',
                           year: 'numeric'
@@ -77,12 +134,14 @@ export default function HomePage() {
                       </p>
                     </div>
                   </div>
-                  <span className="h-1 w-1 rounded-full bg-white/50" />
-                  <span className="text-sm">{latestRubrik.readTime} menit baca</span>
-                  <span className="h-1 w-1 rounded-full bg-white/50" />
-                  <span className="inline-flex items-center gap-1 text-sm">
-                    <span className="text-islamGreen-pastel">•</span> {latestRubrik.rubrik.name}
-                  </span>
+                  {featuredRubrik.category && (
+                    <>
+                      <span className="h-1 w-1 rounded-full bg-white/50" />
+                      <span className="inline-flex items-center gap-1 text-sm">
+                        <span className="text-islamGreen-pastel">•</span> {featuredRubrik.category.name}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -114,18 +173,24 @@ export default function HomePage() {
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {trendingRubrik.map((article, idx) => (
+          {trendingRubrik.slice(0, 6).map((article, idx) => (
             <article
               key={article.id}
               className="group relative overflow-hidden rounded-2xl bg-white shadow-md border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
-              <div className="relative h-48 w-full overflow-hidden">
-                <Image
-                  src={article.imageUrl || '/placeholder.jpg'}
-                  alt={article.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+              <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                {article.thumbnail ? (
+                  <Image
+                    src={article.thumbnail}
+                    alt={article.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-orange-200">
+                    <Flame className="w-16 h-16 text-orange-400" />
+                  </div>
+                )}
                 <div className="absolute top-4 left-4 flex items-center gap-2">
                   <span className="rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
                     #{idx + 1} Trending
@@ -134,12 +199,11 @@ export default function HomePage() {
               </div>
 
               <div className="p-6">
-                <span
-                  className="mb-2 inline-block text-xs font-semibold uppercase tracking-wider"
-                  style={{ color: article.rubrik.color }}
-                >
-                  {article.rubrik.name}
-                </span>
+                {article.category && (
+                  <span className="mb-2 inline-block text-xs font-semibold uppercase tracking-wider text-islamGreen">
+                    {article.category.name}
+                  </span>
+                )}
 
                 <h3 className="mb-3 font-heading text-xl font-bold text-gray-900 leading-tight line-clamp-2 group-hover:text-islamGreen transition-colors">
                   <Link href={`/rubrik/${article.slug}`}>
@@ -152,8 +216,8 @@ export default function HomePage() {
                 </p>
 
                 <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>{article.author}</span>
-                  <span>{article.readTime} menit</span>
+                  <span>{article.author?.name || 'Anonymous'}</span>
+                  <span>{new Date(article.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
                 </div>
               </div>
             </article>
@@ -266,13 +330,19 @@ export default function HomePage() {
               key={article.id}
               className="group relative overflow-hidden rounded-2xl bg-white shadow-md border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
-              <div className="relative h-48 w-full overflow-hidden">
-                <Image
-                  src={article.imageUrl || '/placeholder.jpg'}
-                  alt={article.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+              <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                {article.thumbnail ? (
+                  <Image
+                    src={article.thumbnail}
+                    alt={article.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-yellow-100 to-amber-200">
+                    <Star className="w-16 h-16 text-yellow-400 fill-yellow-400" />
+                  </div>
+                )}
                 <div className="absolute top-4 right-4">
                   <div className="flex items-center gap-1 rounded-full bg-yellow-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
                     <Star className="h-3 w-3 fill-white" />
@@ -282,12 +352,11 @@ export default function HomePage() {
               </div>
 
               <div className="p-6">
-                <span
-                  className="mb-2 inline-block text-xs font-semibold uppercase tracking-wider"
-                  style={{ color: article.rubrik.color }}
-                >
-                  {article.rubrik.name}
-                </span>
+                {article.category && (
+                  <span className="mb-2 inline-block text-xs font-semibold uppercase tracking-wider text-islamGreen">
+                    {article.category.name}
+                  </span>
+                )}
 
                 <h3 className="mb-3 font-heading text-xl font-bold text-gray-900 leading-tight line-clamp-2 group-hover:text-islamGreen transition-colors">
                   <Link href={`/rubrik/${article.slug}`}>
@@ -300,10 +369,10 @@ export default function HomePage() {
                 </p>
 
                 <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>{article.author}</span>
+                  <span>{article.author?.name || 'Anonymous'}</span>
                   <span className="flex items-center gap-1">
                     <TrendingUp className="h-3 w-3" />
-                    {article.views.toLocaleString()} views
+                    {(article.views || article.views_count || 0).toLocaleString()} views
                   </span>
                 </div>
               </div>

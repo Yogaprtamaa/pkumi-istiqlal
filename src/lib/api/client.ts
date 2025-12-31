@@ -121,6 +121,8 @@ class ApiClient {
     const url = `${this.baseURL}${endpoint}`;
     const headers = this.buildHeaders(requiresAuth);
 
+    console.log(`[API Client] ${fetchOptions.method || 'GET'} ${url}`);
+
     try {
       const response = await this.fetchWithTimeout(url, {
         ...fetchOptions,
@@ -130,8 +132,10 @@ class ApiClient {
         },
       });
 
+      console.log(`[API Client] Response ${response.status} for ${url}`);
       return await this.handleResponse<T>(response);
     } catch (error) {
+      console.error(`[API Client] Error for ${url}:`, error);
       if (error instanceof ApiError) {
         throw error;
       }

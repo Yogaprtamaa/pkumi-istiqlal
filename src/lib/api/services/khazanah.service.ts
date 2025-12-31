@@ -71,6 +71,27 @@ class KhazanahService {
 
     return khazanahData;
   }
+
+  /**
+   * Get popular khazanah
+   */
+  async getPopularKhazanah(params: KhazanahQueryParams = {}): Promise<KhazanahItem[]> {
+    const queryString = this.buildQueryString(params);
+    const url = `${API_ENDPOINTS.khazanah.popular}${queryString}`;
+    const response = await apiClient.get<KhazanahResponse>(url);
+    return response.data.data;
+  }
+
+  /**
+   * Get trending khazanah
+   * Note: Trending endpoint returns array directly in data, not data.data
+   */
+  async getTrendingKhazanah(params: KhazanahQueryParams = {}): Promise<KhazanahItem[]> {
+    const queryString = this.buildQueryString(params);
+    const url = `${API_ENDPOINTS.khazanah.trending}${queryString}`;
+    const response = await apiClient.get<{ code: number; status: string; message: string; data: KhazanahItem[] }>(url);
+    return response.data; // Langsung return data, bukan data.data
+  }
 }
 
 // Export singleton instance

@@ -73,6 +73,27 @@ class RubrikService {
 
     return rubrikData;
   }
+
+  /**
+   * Get popular rubrik
+   */
+  async getPopularRubrik(params: RubrikQueryParams = {}): Promise<RubrikItem[]> {
+    const queryString = this.buildQueryString(params);
+    const url = `${API_ENDPOINTS.rubrik.popular}${queryString}`;
+    const response = await apiClient.get<RubrikResponse>(url);
+    return response.data.data;
+  }
+
+  /**
+   * Get trending rubrik
+   * Note: Trending endpoint returns array directly in data, not data.data
+   */
+  async getTrendingRubrik(params: RubrikQueryParams = {}): Promise<RubrikItem[]> {
+    const queryString = this.buildQueryString(params);
+    const url = `${API_ENDPOINTS.rubrik.trending}${queryString}`;
+    const response = await apiClient.get<{ code: number; status: string; message: string; data: RubrikItem[] }>(url);
+    return response.data; // Langsung return data, bukan data.data
+  }
 }
 
 // Export singleton instance

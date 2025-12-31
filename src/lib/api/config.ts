@@ -24,6 +24,8 @@ export const API_ENDPOINTS = {
   khazanah: {
     published: '/api/khazanah/published',
     detail: '/api/khazanah',
+    popular: '/api/khazanah/popular',
+    trending: '/api/khazanah/trending',
   },
   artikel: {
     published: '/api/artikel/published',
@@ -31,6 +33,8 @@ export const API_ENDPOINTS = {
   rubrik: {
     published: '/api/rubrik/published',
     detail: '/api/rubrik',
+    popular: '/api/rubrik/popular',
+    trending: '/api/rubrik/trending',
   },
   // Tambahkan endpoints lainnya di sini
 } as const;

@@ -13,10 +13,10 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import type { Khazanah } from '@/types';
+import type { KhazanahItem } from '@/lib/api/types';
 
 interface KhazanahCarouselProps {
-  items: Khazanah[];
+  items: KhazanahItem[];
 }
 
 export function KhazanahCarousel({ items }: KhazanahCarouselProps) {
@@ -39,14 +39,6 @@ export function KhazanahCarousel({ items }: KhazanahCarouselProps) {
     setCurrentIndex((prev) => (prev + 1) % items.length);
   };
 
-  // Mapping type ke label yang readable
-  const typeLabels = {
-    tafsir: 'Tafsir',
-    hadits: 'Hadits',
-    doa: 'Doa',
-    kisah: 'Kisah',
-  };
-
   return (
     <div className="relative">
       {/* Main Carousel */}
@@ -57,18 +49,24 @@ export function KhazanahCarousel({ items }: KhazanahCarouselProps) {
         >
           {items.map((item) => (
             <div key={item.id} className="w-full shrink-0">
-              <Link href={`/khazanah#${item.slug}`} className="group block">
+              <Link href={`/khazanah/${item.slug}`} className="group block">
                 <Card className="overflow-hidden border-0">
-                  <div className="relative aspect-video sm:aspect-21/9 md:aspect-16/9 lg:aspect-16/10 xl:aspect-4/3">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                  <div className="relative aspect-video sm:aspect-21/9 md:aspect-16/9 lg:aspect-16/10 xl:aspect-4/3 bg-gradient-to-br from-purple-100 to-indigo-200">
+                    {item.thumbnail ? (
+                      <Image
+                        src={item.thumbnail}
+                        alt={item.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700">
+                        <BookOpen className="w-24 h-24 sm:w-32 sm:h-32 text-white/30" />
+                      </div>
+                    )}
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-linear-to-r from-black/90 via-black/70 to-black/30 sm:from-black/85 sm:via-black/60 sm:to-transparent" />
-                    
+
                     {/* Decorative Pattern - hidden on mobile */}
                     <div className="absolute right-0 top-0 h-full w-1/3 opacity-10 hidden sm:block">
                       <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -78,14 +76,16 @@ export function KhazanahCarousel({ items }: KhazanahCarouselProps) {
                         <rect fill="url(#khazanah-pattern)" width="100%" height="100%" />
                       </svg>
                     </div>
-                    
+
                     {/* Content */}
                     <div className="absolute inset-0 flex items-center p-4 sm:p-8 md:p-10 lg:p-12 xl:p-16">
                       <div className="max-w-2xl text-white">
-                        <Badge className="mb-2 sm:mb-4 lg:mb-5 bg-islamGreen hover:bg-islamGreen-dark shadow-lg shadow-islamGreen/30 px-2.5 sm:px-4 lg:px-5 py-1 sm:py-1.5 lg:py-2 text-xs sm:text-sm lg:text-base font-semibold">
-                          <BookOpen className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
-                          {typeLabels[item.type]}
-                        </Badge>
+                        {item.category && (
+                          <Badge className="mb-2 sm:mb-4 lg:mb-5 bg-islamGreen hover:bg-islamGreen-dark shadow-lg shadow-islamGreen/30 px-2.5 sm:px-4 lg:px-5 py-1 sm:py-1.5 lg:py-2 text-xs sm:text-sm lg:text-base font-semibold">
+                            <BookOpen className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
+                            {item.category.name}
+                          </Badge>
+                        )}
                         <h3 className="font-heading text-base sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight drop-shadow-lg line-clamp-2">
                           {item.title}
                         </h3>
@@ -95,7 +95,7 @@ export function KhazanahCarousel({ items }: KhazanahCarouselProps) {
                         <div className="mt-3 sm:mt-5 lg:mt-6 flex items-center gap-2 sm:gap-3">
                           <div className="h-0.5 sm:h-1 w-6 sm:w-10 lg:w-12 rounded-full bg-islamGreen"></div>
                           <p className="text-xs sm:text-sm md:text-base lg:text-lg text-islamGreen-pastel font-medium">
-                            Sumber: {item.source}
+                            {item.student?.name || item.author?.name || 'PKUMI'}
                           </p>
                         </div>
                       </div>
