@@ -37,11 +37,11 @@ export function ProfilePageClient({ slug }: ProfilePageClientProps) {
           slug: user.nim,
           email: user.email,
           avatar: user.image || undefined,
-          bio: `Mahasiswa`,
-          university: "PKUMI",
-          major: "",
-          location: "",
-          joinDate: "2024-01-01", // TODO: Tambahkan field created_at di API jika diperlukan
+          bio: user.description || `Mahasiswa ${user.program || 'PKUMI'}`,
+          university: "PKUMI (Pendidikan Kader Ulama Masjid Istiqlal)",
+          major: user.program || "Pendidikan Kader Ulama",
+          location: user.full_address || (user.city && user.province ? `${user.city}, ${user.province}` : undefined),
+          joinDate: user.admission_year ? `${user.admission_year}-01-01` : "2024-01-01",
           socialMedia: {
             // TODO: Tambahkan field social media di API jika ada
           },
@@ -50,6 +50,15 @@ export function ProfilePageClient({ slug }: ProfilePageClientProps) {
             views: 0,
             likes: 0,
           },
+          // Student additional info
+          nim: user.nim,
+          phone: user.phone,
+          gender: user.gender,
+          place_of_birth: user.place_of_birth,
+          date_of_birth: user.date_of_birth,
+          marital_status: user.marital_status,
+          gpa: user.gpa,
+          graduation_year: user.graduation_year,
           // Article counts
           khazanah_draft_count: user.khazanah_draft_count,
           khazanah_published_count: user.khazanah_published_count,

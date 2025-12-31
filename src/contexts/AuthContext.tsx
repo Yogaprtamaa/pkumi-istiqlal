@@ -18,6 +18,34 @@ interface User {
   status: string;
   image: string | null;
   role: 'user' | 'contributor' | 'admin';
+  // Student profile fields
+  gender?: string | null;
+  place_of_birth?: string | null;
+  date_of_birth?: string | null;
+  student_job?: string | null;
+  marital_status?: string | null;
+  program?: string | null;
+  admission_year?: string | null;
+  first_semester?: string | null;
+  origin_of_university?: string | null;
+  initial_study_program?: string | null;
+  graduation_year?: string | null;
+  gpa?: number | null;
+  address?: string | null;
+  street?: string | null;
+  rt_rw?: string | null;
+  village?: string | null;
+  district?: string | null;
+  city?: string | null;
+  province?: string | null;
+  full_address?: string | null;
+  father_name?: string | null;
+  father_last_education?: string | null;
+  father_job?: string | null;
+  mother_name?: string | null;
+  mother_last_education?: string | null;
+  mother_job?: string | null;
+  description?: string | null;
   // Article counts
   khazanah_draft_count?: number;
   khazanah_published_count?: number;

@@ -26,6 +26,7 @@ import {
   Verified,
   PenLine,
   Lock,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -56,6 +57,15 @@ export interface Author {
     views: number;
     likes: number;
   };
+  // Student additional info
+  nim?: string;
+  phone?: string | null;
+  gender?: string | null;
+  place_of_birth?: string | null;
+  date_of_birth?: string | null;
+  marital_status?: string | null;
+  gpa?: number | null;
+  graduation_year?: string | null;
   // Article counts
   khazanah_draft_count?: number;
   khazanah_published_count?: number;
@@ -708,6 +718,93 @@ export function ProfileContent({
                         (author.rubrik_archived_count || 0)}
                     </span>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Student Information Section - Only show for own profile if data exists */}
+        {isOwnProfile && (author.nim || author.phone || author.gender || author.date_of_birth || author.gpa) && (
+          <div
+            ref={setRef(2)}
+            className="mb-10 sm:mb-14 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-300"
+          >
+            <Card className="overflow-hidden border-0 shadow-xl bg-white">
+              <CardContent className="p-6 sm:p-8">
+                <div className="mb-6">
+                  <h2 className="font-heading text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <div className="p-2.5 bg-linear-to-br from-purple-600 to-purple-700 rounded-xl shadow-lg shadow-purple-600/25">
+                      <User className="h-6 w-6 text-white" />
+                    </div>
+                    Informasi Mahasiswa
+                  </h2>
+                  <p className="text-sm sm:text-base text-gray-600 mt-2">
+                    Detail informasi pribadi dan akademik
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* NIM */}
+                  {author.nim && (
+                    <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">NIM</p>
+                      <p className="text-base font-semibold text-gray-900">{author.nim}</p>
+                    </div>
+                  )}
+
+                  {/* Phone */}
+                  {author.phone && (
+                    <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">No. Telepon</p>
+                      <p className="text-base font-semibold text-gray-900">{author.phone}</p>
+                    </div>
+                  )}
+
+                  {/* Gender */}
+                  {author.gender && (
+                    <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Jenis Kelamin</p>
+                      <p className="text-base font-semibold text-gray-900">{author.gender}</p>
+                    </div>
+                  )}
+
+                  {/* Place & Date of Birth */}
+                  {(author.place_of_birth || author.date_of_birth) && (
+                    <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tempat, Tanggal Lahir</p>
+                      <p className="text-base font-semibold text-gray-900">
+                        {author.place_of_birth && author.date_of_birth
+                          ? `${author.place_of_birth}, ${new Date(author.date_of_birth).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`
+                          : author.place_of_birth || (author.date_of_birth ? new Date(author.date_of_birth).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-')
+                        }
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Marital Status */}
+                  {author.marital_status && (
+                    <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Status Pernikahan</p>
+                      <p className="text-base font-semibold text-gray-900">{author.marital_status}</p>
+                    </div>
+                  )}
+
+                  {/* GPA */}
+                  {author.gpa && (
+                    <div className="p-4 rounded-lg bg-gradient-to-br from-islamGreen/5 to-emerald-500/5 border-2 border-islamGreen/20">
+                      <p className="text-xs font-semibold text-islamGreen-dark uppercase tracking-wider mb-1">IPK</p>
+                      <p className="text-2xl font-bold text-islamGreen">{author.gpa.toFixed(2)}</p>
+                    </div>
+                  )}
+
+                  {/* Graduation Year */}
+                  {author.graduation_year && (
+                    <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tahun Kelulusan</p>
+                      <p className="text-base font-semibold text-gray-900">{author.graduation_year}</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
