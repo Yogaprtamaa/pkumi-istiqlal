@@ -61,7 +61,7 @@ export const FOOTER_QUOTES: FooterQuote[] = [
 
 // Site metadata
 export const SITE_CONFIG = {
-  name: 'Nur Berita',
-  tagline: 'Portal Berita Islami Terpercaya',
-  description: 'Sumber informasi Islami yang mencerahkan, menyajikan berita, kajian, dan khazanah Islam dengan pendekatan modern dan terpercaya.',
+  name: 'Portal PKUMI',
+  tagline: 'Platform Khazanah & Rubrik Kader Ulama',
+  description: 'Platform menulis untuk para kader Pendidikan Kader Ulama Masjid Istiqlal. Berbagi ilmu, khazanah Islam, dan karya tulis yang bermanfaat untuk umat.',
 } as const;
