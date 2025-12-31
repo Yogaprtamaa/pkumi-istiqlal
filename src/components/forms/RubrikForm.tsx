@@ -226,7 +226,7 @@ export function RubrikForm({ initialData, mode = 'create' }: RubrikFormProps) {
           <div className="space-y-2">
             <Label>Thumbnail</Label>
             {thumbnailPreview ? (
-              <div className="relative w-full aspect-video rounded-lg overflow-hidden border">
+              <div className="relative w-full h-48 rounded-lg overflow-hidden border">
                 <Image
                   src={thumbnailPreview}
                   alt="Thumbnail preview"
@@ -242,7 +242,7 @@ export function RubrikForm({ initialData, mode = 'create' }: RubrikFormProps) {
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <Upload className="h-10 w-10 text-gray-400 mb-3" />
                   <p className="mb-2 text-sm text-gray-500">

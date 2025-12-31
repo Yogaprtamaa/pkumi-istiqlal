@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function SubmitKhazanahPage() {
   return (
-    <div className="container max-w-4xl py-8">
+    <div className="container max-w-7xl mx-auto py-8">
       <KhazanahForm mode="create" />
     </div>
   );

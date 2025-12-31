@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function SubmitRubrikPage() {
   return (
-    <div className="container max-w-4xl py-8">
+    <div className="container max-w-7xl mx-auto py-8">
       <RubrikForm mode="create" />
     </div>
   );
