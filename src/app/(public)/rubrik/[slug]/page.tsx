@@ -4,6 +4,7 @@
  * Responsive dan Modern UI
  */
 
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,11 +14,16 @@ import { Badge } from '@/components/ui/badge';
 import { rubrikService } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
 
+// Cache the data fetching to prevent duplicate requests
+const getRubrik = cache(async (slug: string) => {
+  return await rubrikService.getRubrikBySlug(slug);
+});
+
 // Generate metadata dinamis
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const rubrik = await rubrikService.getRubrikBySlug(slug);
+    const rubrik = await getRubrik(slug);
 
     return {
       title: `${rubrik.title} | Portal Berita PKUMI`,
@@ -39,7 +45,7 @@ export default async function RubrikDetailPage({
 
   try {
     const { slug } = await params;
-    rubrik = await rubrikService.getRubrikBySlug(slug);
+    rubrik = await getRubrik(slug);
   } catch {
     notFound();
   }

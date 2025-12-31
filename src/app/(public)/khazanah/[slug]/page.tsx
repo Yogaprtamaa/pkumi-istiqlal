@@ -4,6 +4,7 @@
  * Responsive dan Modern UI
  */
 
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,11 +14,16 @@ import { Badge } from '@/components/ui/badge';
 import { khazanahService } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
 
+// Cache the data fetching to prevent duplicate requests
+const getKhazanah = cache(async (slug: string) => {
+  return await khazanahService.getKhazanahBySlug(slug);
+});
+
 // Generate metadata dinamis
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const khazanah = await khazanahService.getKhazanahBySlug(slug);
+    const khazanah = await getKhazanah(slug);
 
     return {
       title: `${khazanah.title} | Portal Berita PKUMI`,
@@ -39,7 +45,7 @@ export default async function KhazanahDetailPage({
 
   try {
     const { slug } = await params;
-    khazanah = await khazanahService.getKhazanahBySlug(slug);
+    khazanah = await getKhazanah(slug);
   } catch {
     notFound();
   }
