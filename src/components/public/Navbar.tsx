@@ -8,7 +8,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Menu,
   X,
@@ -26,6 +26,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isAuthenticated, logout, isLoading } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -90,6 +91,14 @@ export function Navbar() {
 
   // Toggle mobile menu
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  // Check if menu item is active
+  const isActiveMenu = (href: string) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+    return pathname?.startsWith(href);
+  };
 
   // Handle logout
   const handleLogout = () => {
@@ -169,9 +178,23 @@ export function Navbar() {
                     // Menu biasa tanpa dropdown
                     <Link
                       href={item.href}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-islamGreen"
+                      className={cn(
+                        "relative px-4 py-2 text-sm font-medium transition-all duration-300 group",
+                        isActiveMenu(item.href)
+                          ? "text-islamGreen"
+                          : "text-gray-700 hover:text-islamGreen"
+                      )}
                     >
                       {item.label}
+                      {/* Active indicator with animation */}
+                      <span
+                        className={cn(
+                          "absolute bottom-0 left-1/2 h-0.5 bg-gradient-to-r from-islamGreen via-islamGreen-dark to-islamGreen rounded-full transition-all duration-300 ease-out",
+                          isActiveMenu(item.href)
+                            ? "w-full -translate-x-1/2 opacity-100"
+                            : "w-0 -translate-x-1/2 opacity-0 group-hover:w-full group-hover:opacity-100"
+                        )}
+                      />
                     </Link>
                   )}
                 </div>
@@ -425,10 +448,21 @@ export function Navbar() {
                   ) : (
                     <Link
                       href={item.href}
-                      className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-islamGreen-pastel/30 hover:text-islamGreen-dark transition-colors"
+                      className={cn(
+                        "relative flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-300",
+                        isActiveMenu(item.href)
+                          ? "bg-islamGreen text-white shadow-md shadow-islamGreen/25"
+                          : "text-gray-700 hover:bg-islamGreen-pastel/30 hover:text-islamGreen-dark"
+                      )}
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      {item.label}
+                      {/* Active indicator badge */}
+                      {isActiveMenu(item.href) && (
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full" />
+                      )}
+                      <span className={isActiveMenu(item.href) ? "ml-2" : ""}>
+                        {item.label}
+                      </span>
                     </Link>
                   )}
                 </div>
