@@ -94,6 +94,36 @@ class RubrikService {
     const response = await apiClient.get<{ code: number; status: string; message: string; data: RubrikItem[] }>(url);
     return response.data; // Langsung return data, bukan data.data
   }
+
+  /**
+   * Create new rubrik
+   * @param data - FormData containing rubrik data and optional thumbnail
+   */
+  async createRubrik(data: FormData): Promise<RubrikDetail> {
+    const url = API_ENDPOINTS.rubrik.create;
+    const response = await apiClient.post<RubrikDetailResponse>(url, data, true);
+    return response.data;
+  }
+
+  /**
+   * Update rubrik
+   * @param id - Rubrik ID
+   * @param data - FormData containing updated rubrik data
+   */
+  async updateRubrik(id: number, data: FormData): Promise<RubrikDetail> {
+    const url = `${API_ENDPOINTS.rubrik.update}/${id}`;
+    const response = await apiClient.post<RubrikDetailResponse>(url, data, true);
+    return response.data;
+  }
+
+  /**
+   * Delete rubrik
+   * @param id - Rubrik ID
+   */
+  async deleteRubrik(id: number): Promise<void> {
+    const url = `${API_ENDPOINTS.rubrik.delete}/${id}`;
+    await apiClient.delete(url, true);
+  }
 }
 
 // Export singleton instance

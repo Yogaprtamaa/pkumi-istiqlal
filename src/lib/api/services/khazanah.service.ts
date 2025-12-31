@@ -92,6 +92,36 @@ class KhazanahService {
     const response = await apiClient.get<{ code: number; status: string; message: string; data: KhazanahItem[] }>(url);
     return response.data; // Langsung return data, bukan data.data
   }
+
+  /**
+   * Create new khazanah
+   * @param data - FormData containing khazanah data and optional thumbnail
+   */
+  async createKhazanah(data: FormData): Promise<KhazanahDetail> {
+    const url = API_ENDPOINTS.khazanah.create;
+    const response = await apiClient.post<KhazanahDetailResponse>(url, data, true);
+    return response.data;
+  }
+
+  /**
+   * Update khazanah
+   * @param id - Khazanah ID
+   * @param data - FormData containing updated khazanah data
+   */
+  async updateKhazanah(id: number, data: FormData): Promise<KhazanahDetail> {
+    const url = `${API_ENDPOINTS.khazanah.update}/${id}`;
+    const response = await apiClient.post<KhazanahDetailResponse>(url, data, true);
+    return response.data;
+  }
+
+  /**
+   * Delete khazanah
+   * @param id - Khazanah ID
+   */
+  async deleteKhazanah(id: number): Promise<void> {
+    const url = `${API_ENDPOINTS.khazanah.delete}/${id}`;
+    await apiClient.delete(url, true);
+  }
 }
 
 // Export singleton instance

@@ -41,8 +41,8 @@ class ApiClient {
   /**
    * Build headers with auth token if available
    */
-  private buildHeaders(requiresAuth: boolean = false): HeadersInit {
-    const headers: HeadersInit = {
+  private buildHeaders(requiresAuth: boolean = false, skipContentType: boolean = false): HeadersInit {
+    const headers: HeadersInit = skipContentType ? {} : {
       ...API_CONFIG.headers,
     };
 
@@ -119,14 +119,18 @@ class ApiClient {
     const { requiresAuth = false, ...fetchOptions } = options;
 
     const url = `${this.baseURL}${endpoint}`;
-    const headers = this.buildHeaders(requiresAuth);
+    const isFormData = fetchOptions.body instanceof FormData;
+    const headers = this.buildHeaders(requiresAuth, isFormData);
 
     console.log(`[API Client] ${fetchOptions.method || 'GET'} ${url}`);
 
     try {
       const response = await this.fetchWithTimeout(url, {
         ...fetchOptions,
-        headers: {
+        headers: isFormData ? {
+          // Don't set Content-Type for FormData - browser will set it with boundary
+          ...headers,
+        } : {
           ...headers,
           ...fetchOptions.headers,
         },
@@ -163,10 +167,14 @@ class ApiClient {
     body?: any,
     requiresAuth: boolean = false
   ): Promise<T> {
+    // Check if body is FormData
+    const isFormData = body instanceof FormData;
+
     return this.request<T>(endpoint, {
       method: 'POST',
-      body: body ? JSON.stringify(body) : undefined,
+      body: isFormData ? body : (body ? JSON.stringify(body) : undefined),
       requiresAuth,
+      headers: isFormData ? {} : undefined, // Let browser set Content-Type for FormData
     });
   }
 
