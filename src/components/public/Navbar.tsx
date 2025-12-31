@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import {
   Menu,
   X,
-  Search,
   ChevronDown,
   User,
   LogOut,
@@ -21,7 +20,6 @@ import {
   Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { MENU_ITEMS, SITE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -31,7 +29,6 @@ export function Navbar() {
   const { user, isAuthenticated, logout, isLoading } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [activeDropdown, setActiveDropdown] = React.useState<string | null>(
     null
   );
@@ -93,9 +90,6 @@ export function Navbar() {
 
   // Toggle mobile menu
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  // Toggle search bar
-  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   // Handle logout
   const handleLogout = () => {
@@ -186,37 +180,6 @@ export function Navbar() {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-2">
-              {/* Desktop Search */}
-              <div className="hidden md:block">
-                {isSearchOpen ? (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="search"
-                      placeholder="Cari artikel..."
-                      className="w-64"
-                      autoFocus
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={toggleSearch}
-                      aria-label="Tutup pencarian"
-                    >
-                      <X className="h-5 w-5" />
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={toggleSearch}
-                    aria-label="Buka pencarian"
-                  >
-                    <Search className="h-5 w-5" />
-                  </Button>
-                )}
-              </div>
-
               {/* Submit Button (Desktop) */}
               {isAuthenticated && !isLoading && (
                 <div className="relative hidden md:block" data-submit-menu>
@@ -414,18 +377,6 @@ export function Navbar() {
                 </Link>
               </div>
             )}
-
-            {/* Search Section */}
-            <div className="border-b border-gray-200 p-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  type="search"
-                  placeholder="Cari artikel..."
-                  className="pl-10 bg-gray-50 border-gray-200 focus-visible:ring-1 h-10"
-                />
-              </div>
-            </div>
 
             {/* Navigation Menu - Always visible */}
             <div className="p-4 space-y-1">

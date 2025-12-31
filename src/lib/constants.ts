@@ -26,10 +26,6 @@ export const MENU_ITEMS: MenuItem[] = [
     href: '/',
   },
   {
-    label: 'Artikel',
-    href: '/artikel',
-  },
-  {
     label: 'Rubrik',
     href: '/rubrik',
   },
