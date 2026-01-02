@@ -99,11 +99,12 @@ export function ContentActionButtons({
         await rubrikService.deleteRubrik(slug);
         alert('Rubrik berhasil dihapus');
       }
-      // Redirect to home page after successful delete
-      router.push('/');
+      // Refresh current page to update data
+      router.refresh();
     } catch (error: any) {
       console.error('Error deleting:', error);
       alert(error.message || 'Gagal menghapus. Silakan coba lagi.');
+    } finally {
       setIsProcessing(false);
     }
   };
