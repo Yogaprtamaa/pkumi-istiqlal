@@ -13,7 +13,11 @@ import 'trix/dist/trix.css';
 interface TrixEditorElement extends HTMLElement {
   input?: string;
   placeholder?: string;
-  autofocus?: boolean;
+  autofocus: boolean;
+  value: string;
+  editor?: {
+    loadHTML: (html: string) => void;
+  };
 }
 
 declare global {
