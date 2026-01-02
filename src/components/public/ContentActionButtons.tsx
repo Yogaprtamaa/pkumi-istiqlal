@@ -34,7 +34,10 @@ export function ContentActionButtons({
     return null;
   }
 
-  const handleUnpublish = async () => {
+  const handleUnpublish = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!confirm('Apakah Anda yakin ingin mengubah status menjadi draft?')) {
       return;
     }
@@ -57,7 +60,10 @@ export function ContentActionButtons({
     }
   };
 
-  const handleArchive = async () => {
+  const handleArchive = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     const action = status === 'archived' ? 'mengaktifkan kembali' : 'mengarsipkan';
     if (!confirm(`Apakah Anda yakin ingin ${action} konten ini?`)) {
       return;
@@ -81,7 +87,10 @@ export function ContentActionButtons({
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (
       !confirm(
         `Apakah Anda yakin ingin menghapus ${type} ini? Tindakan ini tidak dapat dibatalkan!`
