@@ -38,7 +38,6 @@ export function KhazanahForm({ initialData, mode = 'create' }: KhazanahFormProps
   const [formData, setFormData] = useState({
     category_id: initialData?.category_id?.toString() || '',
     title: initialData?.title || '',
-    slug: initialData?.slug || '',
     excerpt: initialData?.excerpt || '',
     tags: initialData?.tags || '',
     content: initialData?.content || '',
@@ -63,22 +62,11 @@ export function KhazanahForm({ initialData, mode = 'create' }: KhazanahFormProps
     loadCategories();
   }, []);
 
-  // Auto-generate slug from title
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
-  };
-
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
     setFormData({
       ...formData,
       title,
-      slug: generateSlug(title),
     });
   };
 
@@ -118,7 +106,6 @@ export function KhazanahForm({ initialData, mode = 'create' }: KhazanahFormProps
       const data = new FormData();
       data.append('category_id', formData.category_id);
       data.append('title', formData.title);
-      data.append('slug', formData.slug);
       data.append('excerpt', formData.excerpt);
       data.append('tags', formData.tags);
       data.append('content', formData.content);
@@ -192,19 +179,6 @@ export function KhazanahForm({ initialData, mode = 'create' }: KhazanahFormProps
               placeholder="Masukkan judul khazanah"
               required
             />
-          </div>
-
-          {/* Slug */}
-          <div className="space-y-2">
-            <Label htmlFor="slug">Slug</Label>
-            <Input
-              id="slug"
-              value={formData.slug}
-              onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-              placeholder="slug-otomatis-dari-judul"
-              className="font-mono text-sm"
-            />
-            <p className="text-xs text-muted-foreground">URL: /khazanah/{formData.slug || 'slug-anda'}</p>
           </div>
 
           {/* Excerpt */}

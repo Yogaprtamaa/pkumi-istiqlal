@@ -302,7 +302,7 @@ export function ProfileContent({
         {/* Profile Card - Modern Glass Design */}
         <div
           ref={setRef(0)}
-          className="relative -mt-32 sm:-mt-40 md:-mt-48 mb-10 sm:mb-14 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700"
+          className="relative -mt-32 sm:-mt-40 md:-mt-48 mb-4 sm:mb-6 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700"
         >
           <Card
             className="overflow-hidden border-0 shadow-2xl bg-white/80 backdrop-blur-xl"
@@ -580,7 +580,7 @@ export function ProfileContent({
           author.rubrik_draft_count !== undefined) && (
           <div
             ref={setRef(1)}
-            className="mb-10 sm:mb-14 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-200"
+            className="mb-4 sm:mb-6 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-200"
           >
             <Card className="overflow-hidden border-0 shadow-xl bg-white">
               <CardContent className="p-6 sm:p-8">
@@ -728,7 +728,7 @@ export function ProfileContent({
         {isOwnProfile && (author.nim || author.phone || author.gender || author.date_of_birth || author.gpa) && (
           <div
             ref={setRef(2)}
-            className="mb-10 sm:mb-14 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-300"
+            className="mb-4 sm:mb-6 opacity-0 translate-y-8 [&.animate-in]:opacity-100 [&.animate-in]:translate-y-0 transition-all duration-700 delay-300"
           >
             <Card className="overflow-hidden border-0 shadow-xl bg-white">
               <CardContent className="p-6 sm:p-8">
@@ -794,7 +794,7 @@ export function ProfileContent({
                   {author.gpa && (
                     <div className="p-4 rounded-lg bg-gradient-to-br from-islamGreen/5 to-emerald-500/5 border-2 border-islamGreen/20">
                       <p className="text-xs font-semibold text-islamGreen-dark uppercase tracking-wider mb-1">IPK</p>
-                      <p className="text-2xl font-bold text-islamGreen">{author.gpa.toFixed(2)}</p>
+                      <p className="text-2xl font-bold text-islamGreen">{typeof author.gpa === 'number' ? author.gpa.toFixed(2) : parseFloat(author.gpa).toFixed(2)}</p>
                     </div>
                   )}
 

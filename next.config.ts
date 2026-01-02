@@ -16,6 +16,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Proxy API requests untuk menghindari CORS di development
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://backend-portal.pkumionline.cloud/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

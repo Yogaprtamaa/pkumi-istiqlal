@@ -3,8 +3,24 @@
  * Konfigurasi dasar untuk semua API calls
  */
 
+// Helper to determine base URL based on environment
+const getBaseURL = () => {
+  // Server-side: always use full URL
+  if (typeof window === 'undefined') {
+    return 'https://backend-portal.pkumionline.cloud';
+  }
+  
+  // Client-side development: use relative URL for proxy
+  if (process.env.NODE_ENV === 'development') {
+    return '';
+  }
+  
+  // Client-side production: use full URL
+  return 'https://backend-portal.pkumionline.cloud';
+};
+
 export const API_CONFIG = {
-  baseURL: 'https://backend-portal.pkumionline.cloud',
+  baseURL: getBaseURL(),
   timeout: 10000, // 10 seconds
   headers: {
     'Content-Type': 'application/json',
