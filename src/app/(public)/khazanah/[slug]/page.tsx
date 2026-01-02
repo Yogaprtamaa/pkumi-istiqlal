@@ -130,6 +130,7 @@ export default async function KhazanahDetailPage({
             fill
             className="object-cover"
             priority
+            unoptimized
           />
         </div>
 

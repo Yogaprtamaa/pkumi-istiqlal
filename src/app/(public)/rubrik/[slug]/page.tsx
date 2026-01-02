@@ -138,6 +138,7 @@ export default async function RubrikDetailPage({
             fill
             className="object-cover"
             priority
+            unoptimized
           />
         </div>
 

@@ -91,6 +91,7 @@ export function RubrikCard({
             alt={rubrik.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
+            unoptimized
           />
           {/* Overlay on hover */}
           <div className="absolute inset-0 bg-islamGreen/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
