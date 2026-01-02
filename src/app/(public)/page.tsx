@@ -13,6 +13,9 @@ import { khazanahService } from '@/lib/api/services/khazanah.service';
 import { rubrikService } from '@/lib/api/services/rubrik.service';
 import type { KhazanahItem, RubrikItem } from '@/lib/api/types';
 
+// Revalidate cache every 60 seconds to ensure fresh popular/trending data
+export const revalidate = 60;
+
 export default async function HomePage() {
   // Fetch data dari API
   let featuredRubrik: RubrikItem | null = null;
@@ -91,6 +94,7 @@ export default async function HomePage() {
                     alt={featuredRubrik.title}
                     fill
                     className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+                    unoptimized
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-islamGreen via-islamGreen-dark to-emerald-800 flex items-center justify-center">
@@ -185,6 +189,7 @@ export default async function HomePage() {
                     alt={article.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    unoptimized
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-orange-200">
@@ -337,6 +342,7 @@ export default async function HomePage() {
                     alt={article.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    unoptimized
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-yellow-100 to-amber-200">
