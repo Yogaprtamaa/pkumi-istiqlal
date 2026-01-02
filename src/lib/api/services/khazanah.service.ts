@@ -105,11 +105,11 @@ class KhazanahService {
 
   /**
    * Update khazanah
-   * @param id - Khazanah ID
+   * @param slug - Khazanah slug
    * @param data - FormData containing updated khazanah data
    */
-  async updateKhazanah(id: number, data: FormData): Promise<KhazanahDetail> {
-    const url = `${API_ENDPOINTS.khazanah.update}/${id}`;
+  async updateKhazanah(slug: string, data: FormData): Promise<KhazanahDetail> {
+    const url = `${API_ENDPOINTS.khazanah.update}/${slug}`;
     const response = await apiClient.post<KhazanahDetailResponse>(url, data, true);
     return response.data;
   }

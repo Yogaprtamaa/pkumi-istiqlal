@@ -95,6 +95,12 @@ export function RubrikForm({ initialData, mode = 'create' }: RubrikFormProps) {
       return;
     }
 
+    // Prevent editing published content
+    if (mode === 'edit' && initialData && initialData.status === 'published') {
+      alert('Rubrik yang sudah dipublikasikan tidak dapat diedit. Silakan hubungi admin jika perlu melakukan perubahan.');
+      return;
+    }
+
     if (!formData.category_id || !formData.title || !formData.content) {
       alert('Mohon lengkapi kategori, judul, dan konten');
       return;
@@ -121,7 +127,7 @@ export function RubrikForm({ initialData, mode = 'create' }: RubrikFormProps) {
       }
 
       if (mode === 'edit' && initialData) {
-        await rubrikService.updateRubrik(initialData.id, data);
+        await rubrikService.updateRubrik(initialData.slug, data);
         alert('Rubrik berhasil diupdate! Menunggu persetujuan admin.');
       } else {
         await rubrikService.createRubrik(data);
@@ -209,6 +215,9 @@ export function RubrikForm({ initialData, mode = 'create' }: RubrikFormProps) {
           {/* Thumbnail Upload */}
           <div className="space-y-2">
             <Label>Thumbnail</Label>
+            <p className="text-xs text-gray-500 mb-2">
+              Ukuran yang direkomendasikan: <span className="font-semibold text-islamGreen">1200x675 px</span> atau <span className="font-semibold text-islamGreen">1920x1080 px</span> (rasio 16:9)
+            </p>
             {thumbnailPreview ? (
               <div className="relative w-full h-48 rounded-lg overflow-hidden border">
                 <Image

@@ -107,11 +107,11 @@ class RubrikService {
 
   /**
    * Update rubrik
-   * @param id - Rubrik ID
+   * @param slug - Rubrik slug
    * @param data - FormData containing updated rubrik data
    */
-  async updateRubrik(id: number, data: FormData): Promise<RubrikDetail> {
-    const url = `${API_ENDPOINTS.rubrik.update}/${id}`;
+  async updateRubrik(slug: string, data: FormData): Promise<RubrikDetail> {
+    const url = `${API_ENDPOINTS.rubrik.update}/${slug}`;
     const response = await apiClient.post<RubrikDetailResponse>(url, data, true);
     return response.data;
   }

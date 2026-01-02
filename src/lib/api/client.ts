@@ -186,10 +186,14 @@ class ApiClient {
     body?: any,
     requiresAuth: boolean = true
   ): Promise<T> {
+    // Check if body is FormData
+    const isFormData = body instanceof FormData;
+
     return this.request<T>(endpoint, {
       method: 'PUT',
-      body: body ? JSON.stringify(body) : undefined,
+      body: isFormData ? body : (body ? JSON.stringify(body) : undefined),
       requiresAuth,
+      headers: isFormData ? {} : undefined, // Let browser set Content-Type for FormData
     });
   }
 
