@@ -5,35 +5,96 @@
 
 import { MenuItem, FooterQuote } from '@/types';
 
-// Warna tema Islami
+// Warna tema PKUMI
 export const COLORS = {
-  primary: '#2E7D32',      // Hijau tua utama
-  secondary: '#4CAF50',    // Hijau sedang
-  pastel: '#A5D6A7',       // Hijau pastel
-  accent: '#1B5E20',       // Hijau sangat tua untuk hover
-  background: '#FFFFFF',   // Putih
-  surface: '#F5F5F5',      // Abu-abu sangat lembut
-  surfaceAlt: '#FAFAFA',   // Abu-abu hampir putih
-  text: '#212121',         // Hampir hitam untuk teks
-  textSecondary: '#757575', // Abu-abu untuk teks sekunder
-  border: '#E0E0E0',       // Border sangat halus
+  // Primary: Emerald Green
+  primary: '#10B981',
+  primaryDark: '#15803D',
+  primaryLight: '#DCFCE7',
+  
+  // Secondary: Slate/Dark Grey
+  secondary: '#475569',
+  secondaryDark: '#1E293B',
+  secondaryLight: '#F1F5F9',
+  
+  // Accent: Amber/Gold
+  accent: '#F59E0B',
+  accentDark: '#D97706',
+  accentLight: '#FFFBEB',
+  
+  // Neutral
+  background: '#FFFFFF',
+  surface: '#F8FAFC',
+  surfaceAlt: '#FAFBFC',
+  text: '#0F172A',
+  textSecondary: '#475569',
+  border: '#E2E8F0',
 } as const;
 
-// Menu navigasi utama
-export const MENU_ITEMS: MenuItem[] = [
+// ============= MENU COMPRO (Website Institusi) =============
+export const COMPRO_MENU_ITEMS: MenuItem[] = [
+  {
+    label: 'Beranda',
+    href: '/home',
+  },
+  {
+    label: 'Profil',
+    href: '/profil',
+    submenu: [
+      { label: 'Tentang PKUMI', href: '/profil' },
+      { label: 'Struktur Organisasi', href: '/profil/struktur' },
+      { label: 'Dosen Pengajar', href: '/profil/dosen' },
+    ]
+  },
+  {
+    label: 'Akademik',
+    href: '/akademik',
+    submenu: [
+      { label: 'Agenda', href: '/akademik/agenda' },
+      { label: 'Penelitian', href: '/akademik/penelitian' },
+      { label: 'Mata Kuliah', href: '/akademik/matkul' },
+      { label: 'Kalender Akademik', href: '/akademik/kalender' },
+      { label: 'Jurnal', href: '/akademik/jurnal' },
+      { label: 'Khazanah PKUMI', href: '/akademik/khazanah' },
+      { label: 'Kurikulum', href: '/akademik/kurikulum' },
+    ]
+  },
+  {
+    label: 'Galeri',
+    href: '/galeri',
+  },
+  {
+    label: 'Pendaftaran',
+    href: '/pendaftaran',
+  },
+  {
+    label: 'Kontak',
+    href: '/kontak',
+  },
+];
+
+// ============= MENU PORTAL BERITA =============
+export const PORTAL_MENU_ITEMS: MenuItem[] = [
   {
     label: 'Beranda',
     href: '/',
   },
   {
-    label: 'Rubrik',
-    href: '/rubrik',
-  },
-  {
     label: 'Khazanah',
     href: '/khazanah',
   },
+  {
+    label: 'Rubrik',
+    href: '/rubrik',
+  },
+  // {
+  //   label: 'Penulis',
+  //   href: '/penulis',
+  // },
 ];
+
+// ============= MENU LEGACY (Backwards compatibility) =============
+export const MENU_ITEMS: MenuItem[] = PORTAL_MENU_ITEMS;
 
 // Koleksi quote untuk footer (ayat & hadits pendek)
 export const FOOTER_QUOTES: FooterQuote[] = [
@@ -61,7 +122,7 @@ export const FOOTER_QUOTES: FooterQuote[] = [
 
 // Site metadata
 export const SITE_CONFIG = {
-  name: 'Portal PKUMI',
+  name: 'Portal Berita PKUMI',
   tagline: 'Platform Khazanah & Rubrik Kader Ulama',
   description: 'Platform menulis untuk para kader Pendidikan Kader Ulama Masjid Istiqlal. Berbagi ilmu, khazanah Islam, dan karya tulis yang bermanfaat untuk umat.',
 } as const;

@@ -44,6 +44,7 @@ export interface MenuItem {
   label: string;
   href: string;
   children?: MenuItem[];
+  submenu?: MenuItem[];
 }
 
 // Interface untuk footer quote (ayat/hadits)

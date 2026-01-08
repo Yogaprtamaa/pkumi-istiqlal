@@ -18,9 +18,10 @@ import {
   PenSquare,
   BookOpen,
   Plus,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MENU_ITEMS, SITE_CONFIG } from "@/lib/constants";
+import { PORTAL_MENU_ITEMS, SITE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -122,19 +123,19 @@ export function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center gap-2.5 text-xl font-heading font-bold text-islamGreen transition-all duration-300 hover:text-islamGreen-dark hover:scale-105"
+              className="flex items-center gap-2 text-base font-semibold text-slate-900 transition-colors hover:text-emerald-700"
             >
               <img
                 src="/logo_pku-mi.png"
                 alt="PKU-MI Logo"
-                className="h-16 w-16 object-contain"
+                className="h-10 w-10 object-contain"
               />
               <span className="hidden sm:inline">{SITE_CONFIG.name}</span>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:gap-1">
-              {MENU_ITEMS.map((item) => (
+              {PORTAL_MENU_ITEMS.map((item) => (
                 <div
                   key={item.label}
                   className="relative"
@@ -205,6 +206,15 @@ export function Navbar() {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-2">
+              {/* Switch to Compro Button */}
+              <Link
+                href="/home"
+                className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold hover:bg-emerald-200 transition-colors"
+              >
+                <Globe className="w-4 h-4" />
+                Compro
+              </Link>
+
               {/* Submit Button (Desktop) */}
               {isAuthenticated && !isLoading && (
                 <div className="relative hidden md:block" data-submit-menu>
@@ -308,7 +318,7 @@ export function Navbar() {
                       <Button
                         variant="default"
                         size="sm"
-                        className="bg-islamGreen hover:bg-islamGreen-dark"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-sm"
                       >
                         Masuk
                       </Button>
@@ -410,7 +420,7 @@ export function Navbar() {
               <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
                 Menu
               </p>
-              {MENU_ITEMS.map((item) => (
+              {PORTAL_MENU_ITEMS.map((item) => (
                 <div key={item.label}>
                   {item.children ? (
                     <div className="space-y-0.5">
@@ -500,7 +510,17 @@ export function Navbar() {
           </div>
 
           {/* Sidebar Footer - Auth Actions */}
-          <div className="border-t border-gray-200 p-4 bg-white">
+          <div className="border-t border-gray-200 p-4 bg-white space-y-3">
+            {/* Switch to Compro */}
+            <Link
+              href="/home"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-100 text-emerald-700 rounded-lg font-semibold hover:bg-emerald-200 transition-colors"
+            >
+              <Globe className="w-5 h-5" />
+              Compro PKUMI
+            </Link>
+
             {isAuthenticated ? (
               <Button
                 onClick={() => {
