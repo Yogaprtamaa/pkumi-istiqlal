@@ -1,7 +1,7 @@
 /**
  * Navbar Compro
  * Navbar khusus untuk website institusi (Compro PKUMI)
- * Tidak ada fitur login/register - fokus navigasi informasi
+ * Modifikasi: Menu Desktop Center (Absolute Positioning)
  */
 
 'use client';
@@ -9,7 +9,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, Globe, Newspaper } from 'lucide-react';
+import { Menu, X, ChevronDown, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { COMPRO_MENU_ITEMS } from '@/lib/constants';
 
@@ -28,6 +28,18 @@ export function NavbarCompro() {
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (activeDropdown && !target.closest('[data-dropdown]')) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [activeDropdown]);
 
   // Prevent body scroll when mobile menu open
   React.useEffect(() => {
@@ -59,12 +71,13 @@ export function NavbarCompro() {
         )}
       >
         <nav className="mx-auto max-w-7xl px-6">
-          <div className="flex h-20 items-center justify-between">
+          {/* PARENT CONTAINER: Relative agar child absolute mengacu ke sini */}
+          <div className="flex h-20 items-center justify-between relative">
             
-            {/* Logo */}
+            {/* 1. LOGO (KIRI) */}
             <Link
               href="/home"
-              className="flex items-center gap-3 text-xl font-bold text-slate-900 hover:text-emerald-700 transition-colors"
+              className="flex items-center gap-3 text-xl font-bold text-slate-900 hover:text-emerald-700 transition-colors z-10"
             >
               <img
                 src="/logo_pku-mi.png"
@@ -77,18 +90,18 @@ export function NavbarCompro() {
               </div>
             </Link>
 
-            {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center gap-8">
+            {/* 2. DESKTOP MENU (CENTER ABSOLUTE) */}
+            <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
               {COMPRO_MENU_ITEMS.map((item) => (
                 <div
                   key={item.label}
                   className="relative"
-                  onMouseEnter={() => item.submenu && setActiveDropdown(item.label)}
-                  onMouseLeave={() => setActiveDropdown(null)}
+                  data-dropdown
                 >
                   {item.submenu ? (
                     <>
                       <button
+                        onClick={() => setActiveDropdown(activeDropdown === item.label ? null : item.label)}
                         className={cn(
                           'flex items-center gap-1 text-sm font-semibold transition-colors',
                           activeDropdown === item.label
@@ -106,11 +119,13 @@ export function NavbarCompro() {
                       </button>
 
                       {activeDropdown === item.label && (
-                        <div className="absolute left-0 top-full mt-2 w-56 rounded-xl bg-white py-2 shadow-xl border border-slate-100">
+                        // Dropdown menu centering
+                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 rounded-xl bg-white py-2 shadow-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
                           {item.submenu.map((child) => (
                             <Link
                               key={child.href}
                               href={child.href}
+                              onClick={() => setActiveDropdown(null)}
                               className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
                             >
                               {child.label}
@@ -137,24 +152,28 @@ export function NavbarCompro() {
                   )}
                 </div>
               ))}
-
-              {/* Switch to Portal Button */}
-              <Link
-                href="/"
-                className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold hover:bg-amber-200 transition-colors"
-              >
-                <Newspaper className="w-4 h-4" />
-                Portal Berita
-              </Link>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 text-slate-700 hover:text-emerald-700 transition-colors"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* 3. TOMBOL MOBILE / KANAN (TETAP DI KANAN) */}
+            <div className="flex items-center gap-4 z-10">
+              
+              {/* Jika ingin mengaktifkan tombol Portal Berita di Desktop, uncomment ini: */}
+              {/* <Link
+                href="/"
+                className="hidden lg:flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold hover:bg-amber-200 transition-colors"
+              >
+                <Newspaper className="w-4 h-4" />
+                Portal
+              </Link> */}
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="lg:hidden p-2 text-slate-700 hover:text-emerald-700 transition-colors"
+              >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </nav>
       </header>
