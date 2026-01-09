@@ -71,6 +71,10 @@ export const COMPRO_MENU_ITEMS: MenuItem[] = [
     label: 'Kontak',
     href: '/kontak',
   },
+  {
+    label: 'Faq',
+    href: '/faq',
+  },
 ];
 
 // ============= MENU PORTAL BERITA =============
