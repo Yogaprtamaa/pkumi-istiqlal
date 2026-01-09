@@ -501,65 +501,7 @@ export default function Home() {
       {/* =========================================
           FOOTER (DILENGKAPI)
       ========================================= */}
-      <footer className="bg-slate-950 text-slate-400 pt-16 pb-10 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
 
-          {/* Brand */}
-          <div className="space-y-6">
-            <h4 className="text-3xl font-bold text-white tracking-tight">PKU-MI</h4>
-            <p className="text-sm leading-relaxed">
-              Pendidikan Kader Ulama Masjid Istiqlal.<br />
-              Membangun Peradaban Islam dari Jakarta untuk Dunia.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all"><Facebook size={18} /></a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all"><Instagram size={18} /></a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all"><Twitter size={18} /></a>
-            </div>
-          </div>
-
-          {/* 2. Profil & 3. Berita */}
-          <div>
-            <h5 className="font-bold text-white mb-6 uppercase tracking-wider text-xs">Profil & Berita</h5>
-            <ul className="space-y-3 text-sm">
-              <li><Link href="/profil/tentang" className="hover:text-emerald-400 transition">Tentang PKUMI (Visi & Misi)</Link></li>
-              <li><Link href="/profil/struktur" className="hover:text-emerald-400 transition">Struktur Management</Link></li>
-              <li><Link href="/profil/dosen" className="hover:text-emerald-400 transition">Daftar Dosen Pengajar</Link></li>
-              <li><Link href="/berita" className="hover:text-emerald-400 transition">Berita PKUMI</Link></li>
-              <li><Link href="/berita/opini" className="hover:text-emerald-400 transition">Rubrik Opini</Link></li>
-            </ul>
-          </div>
-
-          {/* 4. Akademik */}
-          <div>
-            <h5 className="font-bold text-white mb-6 uppercase tracking-wider text-xs">Akademik</h5>
-            <ul className="space-y-3 text-sm">
-              <li><Link href="/akademik/agenda" className="hover:text-emerald-400 transition">Agenda</Link></li>
-              <li><Link href="/akademik/penelitian" className="hover:text-emerald-400 transition">Penelitian (Tesis/Disertasi)</Link></li>
-              <li><Link href="/akademik/matkul" className="hover:text-emerald-400 transition">Mata Kuliah</Link></li>
-              <li><Link href="/akademik/kalender" className="hover:text-emerald-400 transition">Kalender Akademik</Link></li>
-              <li><Link href="/akademik/jurnal" className="hover:text-emerald-400 transition">Jurnal Ilmiah</Link></li>
-              <li><Link href="/akademik/khazanah" className="hover:text-emerald-400 transition">Khazanah</Link></li>
-            </ul>
-          </div>
-
-          {/* 6. Pendaftaran & Tautan Cepat */}
-          <div>
-            <h5 className="font-bold text-white mb-6 uppercase tracking-wider text-xs">Pendaftaran</h5>
-            <ul className="space-y-3 text-sm">
-              <li><Link href="/pendaftaran" className="hover:text-emerald-400 transition font-bold text-emerald-500">Daftar Sekarang</Link></li>
-              <li><Link href="/pendaftaran/syarat" className="hover:text-emerald-400 transition">Persyaratan Pendaftaran</Link></li>
-              <li><Link href="/pendaftaran/biaya" className="hover:text-emerald-400 transition">Biaya Pendidikan</Link></li>
-              <li><Link href="/pendaftaran/beasiswa" className="hover:text-emerald-400 transition">Beasiswa Istiqlal</Link></li>
-              <li><Link href="/faq" className="hover:text-emerald-400 transition">Bantuan / FAQ</Link></li>
-            </ul>
-          </div>
-
-        </div>
-        <div className="border-t border-slate-900 pt-8 text-center text-xs text-slate-600">
-          &copy; {new Date().getFullYear()} PKU Masjid Istiqlal. All rights reserved.
-        </div>
-      </footer>
     </main>
   );
 }
