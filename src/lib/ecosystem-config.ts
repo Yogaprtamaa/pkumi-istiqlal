@@ -14,6 +14,7 @@ export const ECOSYSTEM_CONFIG = {
   portal: {
     name: 'Portal Berita PKUMI',
     slug: 'portal',
+    description: 'Portal berita dan informasi PKUMI',
     public: true,
     routes: {
       home: '/',
@@ -32,6 +33,7 @@ export const ECOSYSTEM_CONFIG = {
   compro: {
     name: 'Compro PKUMI',
     slug: 'compro',
+    description: 'Dashboard admin dan manajemen konten',
     public: false,
     routes: {
       dashboard: '/compro/dashboard',
@@ -165,16 +167,16 @@ export const STORAGE_KEYS = {
 export const NAVIGATION_GUARDS = {
   // Dari portal ke compro
   portalToCompro: (userRole: UserRole): boolean => {
-    return RBAC[userRole].ecosystems.includes('compro');
+    return RBAC[userRole].ecosystems.includes('compro' as any);
   },
   // Dari compro ke portal
   comproToPortal: (userRole: UserRole): boolean => {
-    return RBAC[userRole].ecosystems.includes('portal');
+    return RBAC[userRole].ecosystems.includes('portal' as any);
   },
   // Check access ke specific route
   hasRouteAccess: (userRole: UserRole, ecosystem: Ecosystem, route: string): boolean => {
     const allowedEcosystems = RBAC[userRole].ecosystems;
-    return allowedEcosystems.includes(ecosystem);
+    return allowedEcosystems.includes(ecosystem as any);
   },
 } as const;
 

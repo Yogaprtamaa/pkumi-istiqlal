@@ -4,7 +4,7 @@
  */
 
 import { authService } from '@/lib/api';
-import { ECOSYSTEM_CONFIG } from '@/lib/ecosystem-config';
+import { API_ENDPOINTS } from '@/lib/ecosystem-config';
 
 // ============= SUBMISSION SERVICES =============
 
@@ -26,14 +26,12 @@ export const submissionService = {
    */
   async getAll(ecosystem: string): Promise<SubmissionItem[]> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/submissions`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.submissions : API_ENDPOINTS.portal.articles;
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching submissions:', error);
@@ -46,14 +44,12 @@ export const submissionService = {
    */
   async getPending(ecosystem: string): Promise<SubmissionItem[]> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/submissions?status=pending`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.submissions : API_ENDPOINTS.portal.articles;
+      const response = await fetch(`${endpoint}?status=pending`, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching pending submissions:', error);
@@ -66,16 +62,14 @@ export const submissionService = {
    */
   async approve(submissionId: number, ecosystem: string): Promise<boolean> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/submissions/${submissionId}/approve`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.submissions : API_ENDPOINTS.portal.articles;
+      const response = await fetch(`${endpoint}/${submissionId}/approve`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+          'Content-Type': 'application/json',
+        },
+      });
       return response.ok;
     } catch (error) {
       console.error('Error approving submission:', error);
@@ -88,17 +82,15 @@ export const submissionService = {
    */
   async reject(submissionId: number, reason: string, ecosystem: string): Promise<boolean> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/submissions/${submissionId}/reject`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ reason }),
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.submissions : API_ENDPOINTS.portal.articles;
+      const response = await fetch(`${endpoint}/${submissionId}/reject`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reason }),
+      });
       return response.ok;
     } catch (error) {
       console.error('Error rejecting submission:', error);
@@ -125,14 +117,12 @@ export const userService = {
    */
   async getAll(ecosystem: string): Promise<UserItem[]> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/users`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.users : API_ENDPOINTS.portal.users;
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -145,17 +135,15 @@ export const userService = {
    */
   async updateRole(userId: number, role: string, ecosystem: string): Promise<boolean> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/users/${userId}/role`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ role }),
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.users : API_ENDPOINTS.portal.users;
+      const response = await fetch(`${endpoint}/${userId}/role`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role }),
+      });
       return response.ok;
     } catch (error) {
       console.error('Error updating user role:', error);
@@ -168,15 +156,13 @@ export const userService = {
    */
   async suspend(userId: number, ecosystem: string): Promise<boolean> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/users/${userId}/suspend`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.users : API_ENDPOINTS.portal.users;
+      const response = await fetch(`${endpoint}/${userId}/suspend`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.ok;
     } catch (error) {
       console.error('Error suspending user:', error);
@@ -202,14 +188,12 @@ export const analyticsService = {
    */
   async getOverall(ecosystem: string): Promise<AnalyticsData> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/analytics`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.analytics : API_ENDPOINTS.portal.articles;
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching analytics:', error);
@@ -233,14 +217,12 @@ export const analyticsService = {
     endDate: string
   ): Promise<AnalyticsData> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/analytics?start=${startDate}&end=${endDate}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.analytics : API_ENDPOINTS.portal.articles;
+      const response = await fetch(`${endpoint}?start=${startDate}&end=${endDate}`, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching period analytics:', error);
@@ -279,14 +261,12 @@ export const contentService = {
   async getPublished(ecosystem: string, type?: string): Promise<ContentItem[]> {
     try {
       const query = type ? `?type=${type}` : '';
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/content/published${query}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.submissions : API_ENDPOINTS.portal.articles;
+      const response = await fetch(`${endpoint}${query}`, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching published content:', error);
@@ -299,14 +279,12 @@ export const contentService = {
    */
   async getUserDrafts(ecosystem: string, userId: number): Promise<ContentItem[]> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/content/drafts/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.submissions : API_ENDPOINTS.portal.articles;
+      const response = await fetch(`${endpoint}/drafts/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching user drafts:', error);
@@ -319,14 +297,12 @@ export const contentService = {
    */
   async getTrending(ecosystem: string, limit = 5): Promise<ContentItem[]> {
     try {
-      const response = await fetch(
-        `${ECOSYSTEM_CONFIG[ecosystem as keyof typeof ECOSYSTEM_CONFIG]?.apiEndpoint || ''}/content/trending?limit=${limit}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-        }
-      );
+      const endpoint = ecosystem === 'compro' ? API_ENDPOINTS.compro.submissions : API_ENDPOINTS.portal.articles;
+      const response = await fetch(`${endpoint}/trending?limit=${limit}`, {
+        headers: {
+          Authorization: `Bearer ${authService.getToken()}`,
+        },
+      });
       return response.json();
     } catch (error) {
       console.error('Error fetching trending content:', error);

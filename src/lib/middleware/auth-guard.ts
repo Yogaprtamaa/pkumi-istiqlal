@@ -71,20 +71,17 @@ export function getAccessibleRoutes(role: UserRole, ecosystem: Ecosystem): strin
   const rbacRole = RBAC[role];
   if (!rbacRole) return ['/'];
   
-  const ecosystemPermissions = rbacRole[ecosystem];
-  if (!ecosystemPermissions) return ['/'];
-  
-  // Extract routes from permissions
-  const routes: string[] = [];
-  const permissions = ecosystemPermissions as Record<string, any>;
-  
-  for (const [key, value] of Object.entries(permissions)) {
-    if (typeof value === 'string' && (value.startsWith('/') || key === 'dashboard')) {
-      routes.push(value);
-    }
+  // Check if role can access this ecosystem
+  if (!rbacRole.ecosystems.includes(ecosystem as any)) {
+    return ['/'];
   }
   
-  return routes.length > 0 ? routes : ['/'];
+  // Get ecosystem config routes
+  const ecosystemConfig = ECOSYSTEM_CONFIG[ecosystem];
+  if (!ecosystemConfig) return ['/'];
+  
+  // Return routes from ecosystem config
+  return Object.values(ecosystemConfig.routes);
 }
 
 /**

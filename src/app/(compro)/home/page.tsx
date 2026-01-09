@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, easeInOut } from "framer-motion";
 
 // --- DATA BERITA & OPINI ---
 const newsItems = [
@@ -89,9 +89,10 @@ const akademikItems = [
 ];
 
 // --- ANIMATION VARIANTS ---
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeInOut } }
 };
 
 const stagger = {

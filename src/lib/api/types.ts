@@ -26,6 +26,7 @@ export interface Student {
   city: string | null;
   province: string | null;
   full_address: string | null;
+  role?: 'guest' | 'user' | 'contributor' | 'reviewer' | 'admin';
   // Article counts
   khazanah_draft_count?: number;
   khazanah_published_count?: number;

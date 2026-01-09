@@ -106,10 +106,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (!permissions) return false;
     
-    const ecosystemPermissions = permissions[currentEcosystem];
-    if (!ecosystemPermissions) return false;
-    
-    return (ecosystemPermissions as any).includes(action);
+    // Check if ecosystem is in allowed ecosystems for this role
+    return permissions.ecosystems.includes(currentEcosystem as any);
   };
 
   // Check if user can access specific ecosystem
@@ -129,12 +127,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (!permissions) return false;
     
-    // Check if route is in accessible routes for current ecosystem
-    const ecosystemPermissions = permissions[currentEcosystem];
-    if (!ecosystemPermissions) return false;
-    
-    const routeList = (ecosystemPermissions as any).routes || [];
-    return routeList.some((route: string) => routePath.startsWith(route));
+    // Check if user can access current ecosystem
+    return permissions.ecosystems.includes(currentEcosystem as any);
   };
 
   // Switch ecosystem with validation
